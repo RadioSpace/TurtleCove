@@ -45,8 +45,6 @@ namespace ShaderClassGenerator
                     paramdescriptions[i] = reflecter.GetInputParameterDescription(i);
                 }
 
-
-
                 InputBindingDescription[] bindings = new InputBindingDescription[reflecter.Description.BoundResources];
                 for (int i = 0; i < reflecter.Description.BoundResources; i++)
                 {

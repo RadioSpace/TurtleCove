@@ -14,6 +14,7 @@ namespace ShaderClassGenerator
             //accepts compiled shader file path as input
 
             //idea: argument 2 could be namespace
+            //idea: argument 3 could be shader type hint.  a vertex shader has a few more needs than other shaders. and if a vertex shader is writtin for not using a vertex buffer it would be different still
 
             if (args.Length > 0)
             {
