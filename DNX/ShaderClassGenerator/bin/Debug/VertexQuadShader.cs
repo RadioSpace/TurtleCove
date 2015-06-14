@@ -19,7 +19,7 @@ namespace ShaderClasses
     
     
     [Serializable()]
-    [StructLayout(LayoutKind.Sequential, Size=LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Size=0)]
     public struct VertexQuadShader_Vertex
     {
     }

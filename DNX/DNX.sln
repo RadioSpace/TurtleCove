@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Shaders\Shaders.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderClassGenerator", "ShaderClassGenerator\ShaderClassGenerator.csproj", "{D828742E-0EAE-423B-A24D-DCE0C7C0BB80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BumpMapCompiler", "BumpMapCompiler\BumpMapCompiler.csproj", "{72FEC8FB-A317-4714-B7ED-3E469922090E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,16 @@ Global
 		{D828742E-0EAE-423B-A24D-DCE0C7C0BB80}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D828742E-0EAE-423B-A24D-DCE0C7C0BB80}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D828742E-0EAE-423B-A24D-DCE0C7C0BB80}.Release|Win32.ActiveCfg = Release|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{72FEC8FB-A317-4714-B7ED-3E469922090E}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

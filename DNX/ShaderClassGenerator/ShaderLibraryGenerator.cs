@@ -42,6 +42,27 @@ namespace ShaderClassGenerator
             //create a type for the input
             CodeTypeDeclaration inputClass = new CodeTypeDeclaration(targetClass.Name + "_Vertex");
             inputClass.IsStruct = true;
+
+            foreach (ShaderParameterDescription paramdesc in reader.GetParameterDescription())
+            {
+                switch(paramdesc.ComponentType )
+                {
+                    case RegisterComponentType.Float32:
+                        //determine what to do next
+
+                        break;
+                    case RegisterComponentType.SInt32:
+                        break;
+                    case RegisterComponentType.UInt32:
+                        break;
+                    case RegisterComponentType.Unknown:
+                        break;
+                    default:
+                        throw new NotImplementedException("unrecognized RegisterComponentType " + paramdesc.ComponentType.ToString());
+                }
+            }
+            
+            //calculate size of input struct
             inputClass.CustomAttributes = new CodeAttributeDeclarationCollection(
                 new CodeAttributeDeclaration[]
                 {
@@ -49,9 +70,10 @@ namespace ShaderClassGenerator
                     new CodeAttributeDeclaration("StructLayout",new CodeAttributeArgument[]
                     {
                         new CodeAttributeArgument(new CodeSnippetExpression("LayoutKind.Sequential")),
-                        new CodeAttributeArgument("Size",new CodeSnippetExpression("LayoutKind.Sequential"))//testing code
+                        new CodeAttributeArgument("Size",new CodeSnippetExpression("0"))//testing code
                     }),
                 });
+
 
 
 

@@ -1,0 +1,22 @@
+﻿<Window x:Class="BumpMapCompiler.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <StackPanel>
+            <Button Name="ChooseFileButton" Content="Choose Files" Height="70" Click="ChooseFileButton_Click"/>            
+            <ListBox Name="imageList" ItemsSource="{Binding}" Height="174">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <ContextMenu.Items>
+                            <MenuItem Name="chooseRed" Header="Make Red" Click="chooseRed_Click"/>
+                            <MenuItem Name="chooseGreen" Header="Make Green" Click="chooseGreen_Click"/>
+                            <MenuItem Name="chooseBlue" Header="Make Blue" Click="chooseBlue_Click"/>                            
+                        </ContextMenu.Items>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+            <Button Name="CompileButton" Content="Compile" Click="CompileButton_Click" Height="70"/>
+        </StackPanel>
+    </Grid>
+</Window>
