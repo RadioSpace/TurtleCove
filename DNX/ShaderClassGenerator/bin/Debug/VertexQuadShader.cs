@@ -26,5 +26,7 @@ namespace ShaderClasses
     
     public class VertexQuadShader
     {
+        
+        private LayoutInput inputLayout;
     }
 }

@@ -40,51 +40,154 @@ namespace ShaderClassGenerator
 
 
             //create a type for the input
-            CodeTypeDeclaration inputClass = new CodeTypeDeclaration(targetClass.Name + "_Vertex");
-            inputClass.IsStruct = true;
 
-            foreach (ShaderParameterDescription paramdesc in reader.GetParameterDescription())
+
+
+
+            if (reader.IsVertexShader)
             {
-                switch(paramdesc.ComponentType )
-                {
-                    case RegisterComponentType.Float32:
-                        //determine what to do next
+                //BUG: need to not make a vertex class if the Input is only SV_VertexID as this indicates that the vertex shader is not using a vetrex buffer
+                
+                
+                //add a the input layout field
+                targetClass.Members.Add(new CodeMemberField("LayoutInput", "inputLayout"));
 
-                        break;
-                    case RegisterComponentType.SInt32:
-                        break;
-                    case RegisterComponentType.UInt32:
-                        break;
-                    case RegisterComponentType.Unknown:
-                        break;
-                    default:
-                        throw new NotImplementedException("unrecognized RegisterComponentType " + paramdesc.ComponentType.ToString());
+                //create a class to store vertex  information
+                CodeTypeDeclaration vertexClass = new CodeTypeDeclaration(targetClass.Name + "_Vertex");
+                vertexClass.IsStruct = true;
+
+
+                ShaderParameterDescription[] paramdesciptions = reader.GetParameterDescription();
+
+                int sizeInBytes = 0;
+
+                foreach (ShaderParameterDescription paramdesc in paramdesciptions)
+                {
+                    string fieldName = paramdesc.SemanticName + paramdesc.SemanticIndex.ToString();//this 
+
+                    switch (paramdesc.UsageMask)
+                    {
+                        case RegisterComponentMaskFlags.ComponentX:
+
+                            switch (paramdesc.ComponentType)
+                            {
+                                case RegisterComponentType.Float32:
+                                    vertexClass.Members.Add(new CodeMemberField("float", fieldName));
+                                    sizeInBytes += 4;
+                                    break;
+                                case RegisterComponentType.SInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName));
+                                    sizeInBytes += 2;
+                                    break;
+                                case RegisterComponentType.UInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName));
+                                    sizeInBytes += 4;
+                                    break;
+                                case RegisterComponentType.Unknown:
+                                default:
+                                    break;
+                            }
+                            break;
+                        case RegisterComponentMaskFlags.ComponentX | RegisterComponentMaskFlags.ComponentY:
+                            switch (paramdesc.ComponentType)
+                            {
+                                case RegisterComponentType.Float32:
+                                    vertexClass.Members.Add(new CodeMemberField("Vector2", fieldName));
+                                    sizeInBytes += 8;
+                                    break;
+                                case RegisterComponentType.SInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_X"));
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_Y"));
+                                    sizeInBytes += 4;
+                                    break;
+                                case RegisterComponentType.UInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_X"));
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_Y"));
+                                    sizeInBytes += 8;
+                                    break;
+                                case RegisterComponentType.Unknown:
+                                default:
+                                    break;
+                            }
+                            break;
+                        case RegisterComponentMaskFlags.ComponentX | RegisterComponentMaskFlags.ComponentY | RegisterComponentMaskFlags.ComponentZ:
+                            switch (paramdesc.ComponentType)
+                            {
+                                case RegisterComponentType.Float32:
+                                    vertexClass.Members.Add(new CodeMemberField("Vector3", fieldName));
+                                    sizeInBytes += 12;
+                                    break;
+                                case RegisterComponentType.SInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_X"));
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_Y"));
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_Z"));
+                                    sizeInBytes += 6;
+                                    break;
+                                case RegisterComponentType.UInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_X"));
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_Y"));
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_Z"));
+                                    sizeInBytes += 12;
+                                    break;
+                                case RegisterComponentType.Unknown:
+                                default:
+                                    break;
+                            }
+                            break;
+                        case RegisterComponentMaskFlags.All:
+                            switch (paramdesc.ComponentType)
+                            {
+                                case RegisterComponentType.Float32:
+                                    vertexClass.Members.Add(new CodeMemberField("Vector4", fieldName));
+                                    sizeInBytes += 16;
+                                    break;
+                                case RegisterComponentType.SInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_X"));
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_Y"));
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_Z"));
+                                    vertexClass.Members.Add(new CodeMemberField("short", fieldName + "_W"));
+                                    sizeInBytes += 8;
+                                    break;
+                                case RegisterComponentType.UInt32:
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_X"));
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_Y"));
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_Z"));
+                                    vertexClass.Members.Add(new CodeMemberField("uint", fieldName + "_W"));
+                                    sizeInBytes += 16;
+                                    break;
+                                case RegisterComponentType.Unknown:
+                                default://not sure what to do here 
+                                    break;
+                            }
+                            break;
+                        case RegisterComponentMaskFlags.None:
+                        default://not sure what to do here
+                            break;
+                    }
+
                 }
-            }
-            
-            //calculate size of input struct
-            inputClass.CustomAttributes = new CodeAttributeDeclarationCollection(
-                new CodeAttributeDeclaration[]
+
+                //calculate size of input struct
+                vertexClass.CustomAttributes = new CodeAttributeDeclarationCollection(
+                    new CodeAttributeDeclaration[]
                 {
                     new CodeAttributeDeclaration("Serializable"),
                     new CodeAttributeDeclaration("StructLayout",new CodeAttributeArgument[]
                     {
                         new CodeAttributeArgument(new CodeSnippetExpression("LayoutKind.Sequential")),
-                        new CodeAttributeArgument("Size",new CodeSnippetExpression("0"))//testing code
+                        new CodeAttributeArgument("Size",new CodeSnippetExpression(sizeInBytes.ToString()))//testing code
                     }),
                 });
+                ;
 
 
 
-
-            //add input type to namespace
-            targetNamespace.Types.Add(inputClass);
-
+                //add input type to namespace
+                targetNamespace.Types.Add(vertexClass);
+            }
             //classes for the constant buffers
 
-            //add samplers to the shaderclass
-
-           
+            //add samplers to the shaderclass     
 
             
 

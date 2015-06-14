@@ -21,10 +21,17 @@ namespace ShaderClassGenerator
             if (File.Exists(path) && (Path.GetExtension(path) == ".cso"))
             {
 
+                bool isVertexShader = false;
 
-                ShaderReflection reflecter = new ShaderReflection(File.ReadAllBytes(path));
-                
-                
+                byte[] bytes = File.ReadAllBytes(path);
+                ShaderReflection reflecter = new ShaderReflection(bytes);
+
+                ShaderBytecode bytecode = new ShaderBytecode(bytes);
+                ShaderProfile profile = bytecode.GetVersion();
+                if (profile.GetTypePrefix() == "vs")
+                {
+                    isVertexShader = true;
+                }
 
                 ConstantBuffer[] cbuffers = new ConstantBuffer[reflecter.Description.ConstantBuffers];
                 for (int i = 0; i < reflecter.Description.ConstantBuffers; i++)
@@ -46,9 +53,10 @@ namespace ShaderClassGenerator
                     bindings[i] = reflecter.GetResourceBindingDescription(i);
                 }
 
+                bytecode.Dispose();
                 reflecter.Dispose();
 
-                return new CompiledShaderReader(path ,cbuffers, paramdescriptions, bindings);
+                return new CompiledShaderReader(path, isVertexShader,cbuffers, paramdescriptions, bindings);
 
 
             }
@@ -65,16 +73,21 @@ namespace ShaderClassGenerator
         ConstantBuffer[] cBuffers;
         ShaderParameterDescription[] parameterDescriptions;
         InputBindingDescription[] resourceBindings;
-        
+
+        bool isVertexShader;
+        /// <summary>
+        /// gets whether or not the code is for a vertex shader
+        /// </summary>
+        public bool IsVertexShader { get { return isVertexShader; } }
 
 
-
-        CompiledShaderReader(string fn,ConstantBuffer[] cbs , ShaderParameterDescription[] pds,InputBindingDescription[] rbs)
+        CompiledShaderReader(string fn,bool _isVertexShader,ConstantBuffer[] cbs , ShaderParameterDescription[] pds,InputBindingDescription[] rbs)
         {
             cBuffers = cbs;
             parameterDescriptions = pds;
             resourceBindings = rbs;
             filename = fn;
+            isVertexShader = _isVertexShader;
         }
 
 
