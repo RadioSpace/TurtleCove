@@ -29,7 +29,7 @@ namespace ShaderClassGenerator
 
            
 
-            CodeNamespace targetNamespace = new CodeNamespace("ShaderClasses");
+            CodeNamespace targetNamespace = new CodeNamespace("");
             SetCommonImports(targetNamespace);
 
 

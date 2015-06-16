@@ -10,8 +10,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Shaders\Shaders.vcxproj", "{59F263C0-0952-4FF7-BF93-90718FB560B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderClassGenerator", "ShaderClassGenerator\ShaderClassGenerator.csproj", "{D828742E-0EAE-423B-A24D-DCE0C7C0BB80}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59F263C0-0952-4FF7-BF93-90718FB560B6} = {59F263C0-0952-4FF7-BF93-90718FB560B6}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BumpMapCompiler", "BumpMapCompiler\BumpMapCompiler.csproj", "{72FEC8FB-A317-4714-B7ED-3E469922090E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FF5BD827-5193-4F8F-8665-FCA5D12443BA}"
+	ProjectSection(SolutionItems) = preProject
+		BufferlessVShader.txt = BufferlessVShader.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

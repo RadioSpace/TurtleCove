@@ -17,9 +17,10 @@
   <ItemGroup>
     <FxCompile Include="VertexQuadShader.hlsl" />
     <FxCompile Include="VertexCubeShader.hlsl" />
+    <FxCompile Include="TestVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="types.hlsl">
+    <None Include="Types.hlsli">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

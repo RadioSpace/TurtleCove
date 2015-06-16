@@ -53,8 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ShaderClassGenerator\bin\Debug\VertexQuadShader.cs">
-      <Link>VertexQuadShader.cs</Link>
+    <Compile Include="..\ShaderClassGenerator\bin\Debug\TestVertexShader.cs">
+      <Link>TestVertexShader.cs</Link>
     </Compile>
     <Compile Include="ShellForm.cs">
       <SubType>Form</SubType>

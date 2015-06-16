@@ -47,15 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\VertexQuadShader.cs" />
     <Compile Include="CompiledShaderReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShaderLibraryGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Debug\VertexQuadShader.cso">
-      <Link>VertexQuadShader.cso</Link>
+    <None Include="..\Debug\TestVertexShader.cso">
+      <Link>TestVertexShader.cso</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
