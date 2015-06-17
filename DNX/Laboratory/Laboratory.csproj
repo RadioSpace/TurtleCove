@@ -72,11 +72,16 @@
     <Compile Include="drc_games Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell Tests.cs" />
+    <Compile Include="ShaderLibraryGeneratorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DNX\drc_games.csproj">
       <Project>{831f236c-0ea2-4204-b263-b293413d75ac}</Project>
       <Name>drc_games</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderClassGenerator\ShaderClassGenerator.csproj">
+      <Project>{d828742e-0eae-423b-a24d-dce0c7c0bb80}</Project>
+      <Name>ShaderClassGenerator</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shell\Shell.csproj">
       <Project>{35780412-89e3-4e75-a9c6-96f3188f682b}</Project>

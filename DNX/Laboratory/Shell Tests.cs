@@ -34,7 +34,7 @@ namespace Laboratory
 
             try
             {
-                form.Show();
+                //form.Show();
             }
             catch (Exception EX)
             {
@@ -50,6 +50,8 @@ namespace Laboratory
             
 
         }
+
+        
 
         void form_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
