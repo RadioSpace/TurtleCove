@@ -19,362 +19,84 @@ namespace ShaderClasses
     
     
     [Serializable()]
-    [StructLayout(LayoutKind.Sequential, Size=120)]
-    public struct TestVertexShader_Vertex : System.Runtime.Serialization.ISerializable
+    [StructLayout(LayoutKind.Sequential, Size=24)]
+    public struct TestVertexShader_Vertex : System.Runtime.Serialization.ISerializable, IEquatable<TestVertexShader_Vertex>
     {
         
-        private float _Position0_X;
+        private Vector4 _Position0;
         
-        private Vector2 _Position1;
-        
-        private Vector3 _Position2;
-        
-        private Vector4 _Position3;
-        
-        private int _Texcoord0_X;
-        
-        private int _Texcoord1_X;
-        
-        private int _Texcoord1_Y;
-        
-        private int _Texcoord2_X;
-        
-        private int _Texcoord2_Y;
-        
-        private int _Texcoord2_Z;
-        
-        private int _Texcoord3_X;
-        
-        private int _Texcoord3_Y;
-        
-        private int _Texcoord3_Z;
-        
-        private int _Texcoord3_W;
-        
-        private uint _Texcoord4_X;
-        
-        private uint _Texcoord5_X;
-        
-        private uint _Texcoord5_Y;
-        
-        private uint _Texcoord6_X;
-        
-        private uint _Texcoord6_Y;
-        
-        private uint _Texcoord6_Z;
-        
-        private uint _Texcoord7_X;
-        
-        private uint _Texcoord7_Y;
-        
-        private uint _Texcoord7_Z;
-        
-        private uint _Texcoord7_W;
+        private Vector2 _Texcoord0;
         
         private TestVertexShader_Vertex(SerializationInfo info, StreamingContext context)
         {
-            _Position1 = new Vector2(info.GetSingle("_Position1_X"),info.GetSingle("_Position1_Y"));
-            _Position2 = new Vector3(info.GetSingle("_Position2_X"),info.GetSingle("_Position2_Y"), info.GetSingle("_Position2_Z"));
-            _Position3 = new Vector4(info.GetSingle("_Position3_X"),info.GetSingle("_Position3_Y"), info.GetSingle("_Position3_Z"), info.GetSingle("_Position3_W"));
-            _Position0_X = info.GetSingle("_Position0_X");
-            _Texcoord0_X = info.GetInt32("_Texcoord0_X");
-            _Texcoord1_X = info.GetInt32("_Texcoord1_X");
-            _Texcoord1_Y = info.GetInt32("_Texcoord1_Y");
-            _Texcoord2_X = info.GetInt32("_Texcoord2_X");
-            _Texcoord2_Y = info.GetInt32("_Texcoord2_Y");
-            _Texcoord2_Z = info.GetInt32("_Texcoord2_Z");
-            _Texcoord3_X = info.GetInt32("_Texcoord3_X");
-            _Texcoord3_Y = info.GetInt32("_Texcoord3_Y");
-            _Texcoord3_Z = info.GetInt32("_Texcoord3_Z");
-            _Texcoord3_W = info.GetInt32("_Texcoord3_W");
-            _Texcoord4_X = info.GetUInt32("_Texcoord4_X");
-            _Texcoord5_X = info.GetUInt32("_Texcoord5_X");
-            _Texcoord5_Y = info.GetUInt32("_Texcoord5_Y");
-            _Texcoord6_X = info.GetUInt32("_Texcoord6_X");
-            _Texcoord6_Y = info.GetUInt32("_Texcoord6_Y");
-            _Texcoord6_Z = info.GetUInt32("_Texcoord6_Z");
-            _Texcoord7_X = info.GetUInt32("_Texcoord7_X");
-            _Texcoord7_Y = info.GetUInt32("_Texcoord7_Y");
-            _Texcoord7_Z = info.GetUInt32("_Texcoord7_Z");
-            _Texcoord7_W = info.GetUInt32("_Texcoord7_W");
+            _Position0 = new Vector4(info.GetSingle("_Position0_X"),info.GetSingle("_Position0_Y"), info.GetSingle("_Position0_Z"), info.GetSingle("_Position0_W"));
+            _Texcoord0 = new Vector2(info.GetSingle("_Texcoord0_X"),info.GetSingle("_Texcoord0_Y"));
         }
         
-        public TestVertexShader_Vertex(
-                    Vector2 _Position1_, 
-                    Vector3 _Position2_, 
-                    Vector4 _Position3_, 
-                    float _Position0_X_, 
-                    int _Texcoord0_X_, 
-                    int _Texcoord1_X_, 
-                    int _Texcoord1_Y_, 
-                    int _Texcoord2_X_, 
-                    int _Texcoord2_Y_, 
-                    int _Texcoord2_Z_, 
-                    int _Texcoord3_X_, 
-                    int _Texcoord3_Y_, 
-                    int _Texcoord3_Z_, 
-                    int _Texcoord3_W_, 
-                    uint _Texcoord4_X_, 
-                    uint _Texcoord5_X_, 
-                    uint _Texcoord5_Y_, 
-                    uint _Texcoord6_X_, 
-                    uint _Texcoord6_Y_, 
-                    uint _Texcoord6_Z_, 
-                    uint _Texcoord7_X_, 
-                    uint _Texcoord7_Y_, 
-                    uint _Texcoord7_Z_, 
-                    uint _Texcoord7_W_)
+        public TestVertexShader_Vertex(Vector4 _Position0_, Vector2 _Texcoord0_)
         {
-            _Position1 = _Position1_;
-            _Position2 = _Position2_;
-            _Position3 = _Position3_;
-            _Position0_X = _Position0_X_;
-            _Texcoord0_X = _Texcoord0_X_;
-            _Texcoord1_X = _Texcoord1_X_;
-            _Texcoord1_Y = _Texcoord1_Y_;
-            _Texcoord2_X = _Texcoord2_X_;
-            _Texcoord2_Y = _Texcoord2_Y_;
-            _Texcoord2_Z = _Texcoord2_Z_;
-            _Texcoord3_X = _Texcoord3_X_;
-            _Texcoord3_Y = _Texcoord3_Y_;
-            _Texcoord3_Z = _Texcoord3_Z_;
-            _Texcoord3_W = _Texcoord3_W_;
-            _Texcoord4_X = _Texcoord4_X_;
-            _Texcoord5_X = _Texcoord5_X_;
-            _Texcoord5_Y = _Texcoord5_Y_;
-            _Texcoord6_X = _Texcoord6_X_;
-            _Texcoord6_Y = _Texcoord6_Y_;
-            _Texcoord6_Z = _Texcoord6_Z_;
-            _Texcoord7_X = _Texcoord7_X_;
-            _Texcoord7_Y = _Texcoord7_Y_;
-            _Texcoord7_Z = _Texcoord7_Z_;
-            _Texcoord7_W = _Texcoord7_W_;
+            _Position0 = _Position0_;
+            _Texcoord0 = _Texcoord0_;
         }
         
-        public float Position0_X
+        public SharpDX.Vector4 Position0
         {
             get
             {
-                return _Position0_X;
+                return _Position0;
             }
         }
         
-        public SharpDX.Vector2 Position1
+        public SharpDX.Vector2 Texcoord0
         {
             get
             {
-                return _Position1;
-            }
-        }
-        
-        public SharpDX.Vector3 Position2
-        {
-            get
-            {
-                return _Position2;
-            }
-        }
-        
-        public SharpDX.Vector4 Position3
-        {
-            get
-            {
-                return _Position3;
-            }
-        }
-        
-        public int Texcoord0_X
-        {
-            get
-            {
-                return _Texcoord0_X;
-            }
-        }
-        
-        public int Texcoord1_X
-        {
-            get
-            {
-                return _Texcoord1_X;
-            }
-        }
-        
-        public int Texcoord1_Y
-        {
-            get
-            {
-                return _Texcoord1_Y;
-            }
-        }
-        
-        public int Texcoord2_X
-        {
-            get
-            {
-                return _Texcoord2_X;
-            }
-        }
-        
-        public int Texcoord2_Y
-        {
-            get
-            {
-                return _Texcoord2_Y;
-            }
-        }
-        
-        public int Texcoord2_Z
-        {
-            get
-            {
-                return _Texcoord2_Z;
-            }
-        }
-        
-        public int Texcoord3_X
-        {
-            get
-            {
-                return _Texcoord3_X;
-            }
-        }
-        
-        public int Texcoord3_Y
-        {
-            get
-            {
-                return _Texcoord3_Y;
-            }
-        }
-        
-        public int Texcoord3_Z
-        {
-            get
-            {
-                return _Texcoord3_Z;
-            }
-        }
-        
-        public int Texcoord3_W
-        {
-            get
-            {
-                return _Texcoord3_W;
-            }
-        }
-        
-        public uint Texcoord4_X
-        {
-            get
-            {
-                return _Texcoord4_X;
-            }
-        }
-        
-        public uint Texcoord5_X
-        {
-            get
-            {
-                return _Texcoord5_X;
-            }
-        }
-        
-        public uint Texcoord5_Y
-        {
-            get
-            {
-                return _Texcoord5_Y;
-            }
-        }
-        
-        public uint Texcoord6_X
-        {
-            get
-            {
-                return _Texcoord6_X;
-            }
-        }
-        
-        public uint Texcoord6_Y
-        {
-            get
-            {
-                return _Texcoord6_Y;
-            }
-        }
-        
-        public uint Texcoord6_Z
-        {
-            get
-            {
-                return _Texcoord6_Z;
-            }
-        }
-        
-        public uint Texcoord7_X
-        {
-            get
-            {
-                return _Texcoord7_X;
-            }
-        }
-        
-        public uint Texcoord7_Y
-        {
-            get
-            {
-                return _Texcoord7_Y;
-            }
-        }
-        
-        public uint Texcoord7_Z
-        {
-            get
-            {
-                return _Texcoord7_Z;
-            }
-        }
-        
-        public uint Texcoord7_W
-        {
-            get
-            {
-                return _Texcoord7_W;
+                return _Texcoord0;
             }
         }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("_Position1_X", _Position1.X);
-            info.AddValue("_Position1_Y", _Position1.Y);
-            info.AddValue("_Position2_X", _Position2.X);
-            info.AddValue("_Position2_Y", _Position2.Y);
-            info.AddValue("_Position2_Z", _Position2.Z);
-            info.AddValue("_Position3_X", _Position3.X);
-            info.AddValue("_Position3_Y", _Position3.Y);
-            info.AddValue("_Position3_Z", _Position3.Z);
-            info.AddValue("_Position3_W", _Position3.W);
-            info.AddValue("_Position0_X", _Position0_X);
-            info.AddValue("_Texcoord0_X", _Texcoord0_X);
-            info.AddValue("_Texcoord1_X", _Texcoord1_X);
-            info.AddValue("_Texcoord1_Y", _Texcoord1_Y);
-            info.AddValue("_Texcoord2_X", _Texcoord2_X);
-            info.AddValue("_Texcoord2_Y", _Texcoord2_Y);
-            info.AddValue("_Texcoord2_Z", _Texcoord2_Z);
-            info.AddValue("_Texcoord3_X", _Texcoord3_X);
-            info.AddValue("_Texcoord3_Y", _Texcoord3_Y);
-            info.AddValue("_Texcoord3_Z", _Texcoord3_Z);
-            info.AddValue("_Texcoord3_W", _Texcoord3_W);
-            info.AddValue("_Texcoord4_X", _Texcoord4_X);
-            info.AddValue("_Texcoord5_X", _Texcoord5_X);
-            info.AddValue("_Texcoord5_Y", _Texcoord5_Y);
-            info.AddValue("_Texcoord6_X", _Texcoord6_X);
-            info.AddValue("_Texcoord6_Y", _Texcoord6_Y);
-            info.AddValue("_Texcoord6_Z", _Texcoord6_Z);
-            info.AddValue("_Texcoord7_X", _Texcoord7_X);
-            info.AddValue("_Texcoord7_Y", _Texcoord7_Y);
-            info.AddValue("_Texcoord7_Z", _Texcoord7_Z);
-            info.AddValue("_Texcoord7_W", _Texcoord7_W);
+            info.AddValue("_Position0_X", _Position0.X);
+            info.AddValue("_Position0_Y", _Position0.Y);
+            info.AddValue("_Position0_Z", _Position0.Z);
+            info.AddValue("_Position0_W", _Position0.W);
+            info.AddValue("_Texcoord0_X", _Texcoord0.X);
+            info.AddValue("_Texcoord0_Y", _Texcoord0.Y);
+        }
+        
+        public bool Equals(TestVertexShader_Vertex other)
+        {
+            return (other._Position0 == _Position0) && (other._Position0 == _Position0) && (other._Texcoord0 == _Texcoord0);
+        }
+        
+        public override bool Equals(object other)
+        {
+            if (other is TestVertexShader_Vertex)
+            {
+                return Equals(other);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        public static bool operator==(TestVertexShader_Vertex a, TestVertexShader_Vertex b)
+        {
+            return a.Equals(b);
+        }
+        
+        public static bool operator!=(TestVertexShader_Vertex a, TestVertexShader_Vertex b)
+        {
+            return !a.Equals(b);
+        }
+        
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 31 + Position0.GetHashCode();
+            return hash * 31 + Texcoord0.GetHashCode();
         }
     }
     

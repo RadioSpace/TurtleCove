@@ -52,55 +52,120 @@ namespace ShaderClassGenerator
                     }
                     
                 }
+                CodeMethodReturnStatement returnStatement = new CodeMethodReturnStatement();
+                equals.Parameters.Add(new CodeParameterDeclarationExpression(type.Name, "other"));
+
+                CodeBinaryOperatorExpression isEqualExpression = new CodeBinaryOperatorExpression();
+
+                bool firsttime = true;
+                string expression = "";
 
                 for (int x = 0; x < publicProperties.Count; x++)
                 {
                     CodeMemberProperty property = (CodeMemberProperty)publicProperties[x];
 
+
                     if (property.HasGet)
                     {
                         string typeName = (string)property.UserData["Type"];
-                        string fieldName = (string)property.UserData["Name"] + "_";
-
-
-                        switch (typeName)
-                        {
-                            case "Vector2":                              
-                            case "Vector3":                             
-                            case "Vector4":
-                                equals.Parameters.Add(new CodeParameterDeclarationExpression(typeName, fieldName));
-                                break;
-                            case "int":
-                                equals.Parameters.Add(new CodeParameterDeclarationExpression(typeof(int), fieldName));
-                                break;
-                            case "uint":
-                                equals.Parameters.Add(new CodeParameterDeclarationExpression(typeof(uint), fieldName));
-                                break;
-                            case "float":
-                                equals.Parameters.Add(new CodeParameterDeclarationExpression(typeof(float), fieldName));
-                                break;
-                            default: throw new InvalidOperationException(typeName + " is not supported");
-                        }
+                        string fieldName = (string)property.UserData["Name"];
+                        string otherName = "other.";                      
+                        
+                        
                         //add statments
                         for (int y = x; y < publicProperties.Count; y++)
                         {
-
-                            equals.Statements.Add(
-                                new CodeBinaryOperatorExpression(
-                                    new CodePropertyReferenceExpression(null,publicProperties[x].Name),
-                                    CodeBinaryOperatorType.IdentityEquality,
-                                    new CodePropertyReferenceExpression(null,publicProperties[y].Name +"_")));
-                        
-                        }
-
+                            if(firsttime)
+                            {
+                                expression += "(" + otherName + fieldName + " == " + fieldName + ")";
+                                firsttime = false;
+                            }
+                            else
+                            {
+                                expression += " && (" + otherName + fieldName + " == " + fieldName + ")"; 
+                            }
+                        }                        
                     }
                 }
 
+                returnStatement = new CodeMethodReturnStatement(new CodeSnippetExpression(expression));
+
+                equals.Statements.Add(returnStatement);
                 type.Members.Add(equals);
+
+                //override equals
+                CodeMemberMethod overrideEquals = new CodeMemberMethod();
+                overrideEquals.Attributes = MemberAttributes.Override | MemberAttributes.Public ;
+                overrideEquals.ReturnType = new CodeTypeReference(typeof(bool));
+                overrideEquals.Name = "Equals";
+
+                overrideEquals.Parameters.Add(new CodeParameterDeclarationExpression(typeof(object), "other"));
+
+                //if statement
+                CodeConditionStatement ifOtherIsType = new CodeConditionStatement();
+                ifOtherIsType.Condition = new CodeSnippetExpression("other is " + type.Name);
+                ifOtherIsType.TrueStatements.Add(new CodeSnippetExpression("return Equals(other)"));
+                ifOtherIsType.FalseStatements.Add(new CodeSnippetExpression("return false"));
+
+                overrideEquals.Statements.Add(ifOtherIsType);
+
+                type.Members.Add(overrideEquals);
+
+
+                //static operator ==
+                CodeParameterDeclarationExpression param_A = new CodeParameterDeclarationExpression(type.Name, "a");
+                CodeParameterDeclarationExpression param_B = new CodeParameterDeclarationExpression(type.Name, "b");
+
+                CodeMemberMethod isEqualOperator = new CodeMemberMethod();
+                isEqualOperator.Attributes = MemberAttributes.Static | MemberAttributes.Public;
+                isEqualOperator.ReturnType = new CodeTypeReference(typeof(bool));
+                isEqualOperator.Name = "operator==";
+
+                isEqualOperator.Parameters.Add(param_A);
+                isEqualOperator.Parameters.Add(param_B);
+
+                isEqualOperator.Statements.Add(new CodeMethodReturnStatement(new CodeSnippetExpression("a.Equals(b)")));
+
+                type.Members.Add(isEqualOperator);
+
+                //static operator !=
+                CodeMemberMethod isNotEqualOperator = new CodeMemberMethod();
+                isNotEqualOperator.Attributes = MemberAttributes.Static | MemberAttributes.Public;
+                isNotEqualOperator.ReturnType = new CodeTypeReference(typeof(bool));
+                isNotEqualOperator.Name = "operator!=";
+
+                isNotEqualOperator.Parameters.Add(param_A);
+                isNotEqualOperator.Parameters.Add(param_B);
+
+                isNotEqualOperator.Statements.Add(new CodeMethodReturnStatement(new CodeSnippetExpression("!a.Equals(b)")));
+
+                type.Members.Add(isNotEqualOperator);
+
+                 //get hashcode
+
+                CodeMemberMethod gethashCode = new CodeMemberMethod();
+                gethashCode.Attributes = MemberAttributes.Public | MemberAttributes.Override;
+                gethashCode.ReturnType = new CodeTypeReference(typeof(int));
+                gethashCode.Name = "GetHashCode";
+
+                gethashCode.Statements.Add(new CodeVariableDeclarationStatement(new CodeTypeReference(typeof(int)),"hash = 17"));
+
+                
+                for (int x = 0; x < publicProperties.Count-1; x++)
+                {                    
+                   gethashCode.Statements.Add(new CodeSnippetExpression("hash = hash * 31 + " + publicProperties[x].Name + ".GetHashCode()"));
+                }
+
+                gethashCode.Statements.Add(new CodeMethodReturnStatement(new CodeSnippetExpression("hash * 31 + " + publicProperties[publicProperties.Count - 1].Name + ".GetHashCode()")));
+
+                type.Members.Add(gethashCode);
+
             }
 
             
-            //overide
+           
+
+            
                 
             
         }

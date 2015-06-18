@@ -595,7 +595,7 @@ namespace ShaderClassGenerator
                     }
 
                     //generate Equality code
-                    //ClassHelper.GenerateEqualityCode(vertexClass);
+                    ClassHelper.GenerateEqualityCode(vertexClass);
 
 
                     //add input type to namespace
