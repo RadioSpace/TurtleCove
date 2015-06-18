@@ -10,7 +10,7 @@ cbuffer Args1 : register(b1)
 {//world view
 	float4x4 wv;
 
-}
+};
 
 
 

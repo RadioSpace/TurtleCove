@@ -36,7 +36,7 @@ namespace ShaderClassGenerator
                 ConstantBuffer[] cbuffers = new ConstantBuffer[reflecter.Description.ConstantBuffers];
                 for (int i = 0; i < reflecter.Description.ConstantBuffers; i++)
                 {
-                    cbuffers[i] = reflecter.GetConstantBuffer(i);
+                    cbuffers[i] = reflecter.GetConstantBuffer(i);//this might not work
                 }
 
                 ShaderParameterDescription[] paramdescriptions = new ShaderParameterDescription[reflecter.Description.InputParameters];
@@ -51,10 +51,11 @@ namespace ShaderClassGenerator
                     bindings[i] = reflecter.GetResourceBindingDescription(i);
                 }
 
-                bytecode.Dispose();
-                reflecter.Dispose();
+                ConstantBuffer[] cbuffersCOPY = cbuffers.ToArray();
 
-                return new CompiledShaderReader(path, isVertexShader,cbuffers, paramdescriptions, bindings);
+               
+
+                return new CompiledShaderReader(path, isVertexShader, cbuffersCOPY, paramdescriptions.ToArray(), bindings.ToArray(),reflecter,bytecode);
 
 
             }
@@ -68,6 +69,9 @@ namespace ShaderClassGenerator
         /// </summary>
         public string FileName { get { return filename; } }
 
+        ShaderReflection reflector;
+        ShaderBytecode bytecode;
+
         ConstantBuffer[] cBuffers;
         ShaderParameterDescription[] parameterDescriptions;
         InputBindingDescription[] resourceBindings;
@@ -79,13 +83,16 @@ namespace ShaderClassGenerator
         public bool IsVertexShader { get { return isVertexShader; } }
 
 
-        CompiledShaderReader(string fn,bool _isVertexShader,ConstantBuffer[] cbs , ShaderParameterDescription[] pds,InputBindingDescription[] rbs)
+        CompiledShaderReader(string fn,bool _isVertexShader,ConstantBuffer[] cbs , ShaderParameterDescription[] pds,InputBindingDescription[] rbs,ShaderReflection reflec,ShaderBytecode bytec)
         {
             cBuffers = cbs;
             parameterDescriptions = pds;
             resourceBindings = rbs;
             filename = fn;
             isVertexShader = _isVertexShader;
+
+            reflector = reflec;
+            bytecode = bytec;
         }
 
 
@@ -116,6 +123,10 @@ namespace ShaderClassGenerator
                 }
                 
             }
+
+            bytecode.Dispose();
+            reflector.Dispose();
+            
         }
     }
 }

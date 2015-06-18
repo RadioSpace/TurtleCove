@@ -605,6 +605,10 @@ namespace ShaderClassGenerator
             }
             //classes for the constant buffers
 
+            ClassHelper.GenerateConstantBuffers(targetClass,reader.GetConsttantBuffers());
+
+
+
             //add samplers to the shaderclass     
 
 
@@ -613,6 +617,8 @@ namespace ShaderClassGenerator
 
 
 
+
+            //wrap up /////////////////////////////////////////////////////////////////////////////////////////////////////
             targetNamespace.Types.Add(targetClass);
 
             targetUnit.Namespaces.Add(targetNamespace);

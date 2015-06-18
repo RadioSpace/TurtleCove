@@ -5,6 +5,7 @@ using System.Text;
 
 using System.CodeDom;
 using SharpDX;
+using SharpDX.D3DCompiler;
 
 namespace ShaderClassGenerator
 {
@@ -170,5 +171,49 @@ namespace ShaderClassGenerator
             
         }
 
+        
+        public static void GenerateConstantBuffers(CodeTypeDeclaration type,params ConstantBuffer[] buffers)
+        {
+            foreach (ConstantBuffer cbuffer in buffers)
+            {
+
+                try
+                {
+                    int i = cbuffer.Description.VariableCount;
+                }
+                catch(AccessViolationException EX)
+                {
+                    continue;
+                }
+
+
+                switch (cbuffer.Description.Type)
+                {
+                    case ConstantBufferType.ConstantBuffer:
+
+                        for (int x = 0; x < cbuffer.Description.VariableCount; x++)
+                        {
+                           
+
+                            ShaderReflectionVariable variable = cbuffer.GetVariable(x);
+                            ShaderReflectionType variableType = variable.GetVariableType();
+                        }
+
+                        break;
+                    case ConstantBufferType.InterfacePointers:
+                        //??
+                        break;
+                    case ConstantBufferType.ResourceBindInformation:
+                        //??
+                        break;
+                    case ConstantBufferType.TextureBuffer:
+                        //Texture2D ? ?
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        }
     }
 }

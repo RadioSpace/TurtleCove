@@ -1,6 +1,5 @@
 #include  "Types.hlsli"
 
-
 cbuffer Args0 : register(b0)
 {//projection
 	float4x4 p;
@@ -10,7 +9,7 @@ cbuffer Args1 : register(b1)
 {//world view
 	float4x4 wv;
 
-}
+};
 
 
 
