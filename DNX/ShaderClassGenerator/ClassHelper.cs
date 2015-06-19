@@ -172,31 +172,294 @@ namespace ShaderClassGenerator
         }
 
         
-        public static void GenerateConstantBuffers(CodeTypeDeclaration type,params ConstantBuffer[] buffers)
+        public static CodeTypeDeclaration[] GenerateConstantBufferClasses(CodeNamespace nameSpace, params ConstantBuffer[] buffers)
         {
+
+            //create class list
+            List<CodeTypeDeclaration> cBufferClassList = new List<CodeTypeDeclaration>();
+
+
+            //declare types CodeTypeReference
+            CodeTypeReference
+                intRef = new CodeTypeReference(typeof(int)),
+                uintRef = new CodeTypeReference(typeof(uint)),
+                shortRef = new CodeTypeReference(typeof(short)),
+                byteRef = new CodeTypeReference(typeof(byte)),
+                floatRef = new CodeTypeReference(typeof(float)),
+                doubleRef = new CodeTypeReference(typeof(double)),
+                Vector2Ref = new CodeTypeReference(typeof(Vector2)),
+                Vector3Ref = new CodeTypeReference(typeof(Vector3)),
+                Vector4Ref = new CodeTypeReference(typeof(Vector4)),
+                matrixRef = new CodeTypeReference(typeof(Matrix));
+
+            List<CodeMemberField> primitiveFields = new List<CodeMemberField>();
+            List<CodeMemberField> complexFields = new List<CodeMemberField>();
+
+            List<CodeMemberProperty> primitiveProps = new List<CodeMemberProperty>();
+            List<CodeMemberProperty> complexProps = new List<CodeMemberProperty>();
+
+
+
             foreach (ConstantBuffer cbuffer in buffers)
             {
+                //start class
+                CodeTypeDeclaration constantBufferClass = new CodeTypeDeclaration();
+                constantBufferClass.Attributes = MemberAttributes.Public;
+                constantBufferClass.CustomAttributes.Add(new CodeAttributeDeclaration("Serializable"));
+                constantBufferClass.Name = cbuffer.Description.Name;
 
-                try
-                {
-                    int i = cbuffer.Description.VariableCount;
-                }
-                catch(AccessViolationException EX)
-                {
-                    continue;
-                }
+                
 
-
+                //create variables and don't forget the user data for GenerateEqualityCode()
                 switch (cbuffer.Description.Type)
                 {
                     case ConstantBufferType.ConstantBuffer:
-
                         for (int x = 0; x < cbuffer.Description.VariableCount; x++)
                         {
-                           
-
                             ShaderReflectionVariable variable = cbuffer.GetVariable(x);
                             ShaderReflectionType variableType = variable.GetVariableType();
+
+                            string fieldName = "_" + variable.Description.Name;
+                            string propName = new string(variable.Description.Name.ToUpper().Take(1).ToArray()) + new string(variable.Description.Name.ToLower().Skip(1).ToArray());
+
+                            
+
+
+
+                            switch (variableType.Description.Name)
+                            {
+                                case "float4x4":
+                                    {
+                                        //add matrixRef
+                                        CodeMemberField newField = new CodeMemberField(matrixRef, fieldName);
+                                        newField.UserData.Add("Type", "Matrix");
+                                        newField.UserData.Add("Name", fieldName);
+                                        CodeMemberProperty newProp = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = matrixRef,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newField.Name)));
+                                        newProp.UserData.Add("Type", "Matrix");
+                                        newProp.UserData.Add("Name", propName);
+
+                                        constantBufferClass.Members.Add(newField);
+                                        constantBufferClass.Members.Add(newProp);
+
+                                        complexFields.Add(newField);
+                                        complexProps.Add(newProp);
+
+                                        break;
+                                    }
+
+                                case "float":
+                                    {
+                                        CodeMemberField newField = new CodeMemberField(floatRef, fieldName + "_X");
+                                        newField.UserData.Add("Type", "float");
+                                        newField.UserData.Add("Name", fieldName + "_X");
+                                        CodeMemberProperty newProp = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = floatRef,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newField.Name)));
+                                        newProp.UserData.Add("Type", "float");
+                                        newProp.UserData.Add("Name", propName + "_X");
+
+                                        constantBufferClass.Members.Add(newField);
+                                        constantBufferClass.Members.Add(newProp);
+
+                                        primitiveFields.Add(newField);
+                                        primitiveProps.Add(newProp);
+
+                                        break;
+                                    }
+
+                                case "float2":
+                                    {
+                                        CodeMemberField newField = new CodeMemberField(Vector2Ref, fieldName);
+                                        newField.UserData.Add("Type", "Vector2");
+                                        newField.UserData.Add("Name", fieldName);
+                                        CodeMemberProperty newProp = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = Vector2Ref,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newField.Name)));
+                                        newProp.UserData.Add("Type", "Vector2");
+                                        newProp.UserData.Add("Name", propName);
+
+                                        constantBufferClass.Members.Add(newField);
+                                        constantBufferClass.Members.Add(newProp);
+
+                                        complexFields.Add(newField);
+                                        complexProps.Add(newProp);
+
+                                        break;
+                                    }
+                                case "float3":
+                                    {
+                                        CodeMemberField newField = new CodeMemberField(Vector3Ref, fieldName);
+                                        newField.UserData.Add("Type", "Vector3");
+                                        newField.UserData.Add("Name", fieldName);
+                                        CodeMemberProperty newProp = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = Vector3Ref,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newField.Name)));
+                                        newProp.UserData.Add("Type", "Vector3");
+                                        newProp.UserData.Add("Name", propName);
+
+                                        constantBufferClass.Members.Add(newField);
+                                        constantBufferClass.Members.Add(newProp);
+
+                                        complexFields.Add(newField);
+                                        complexProps.Add(newProp);
+
+                                        break;
+                                    }
+                                case "float4":
+                                    {
+                                        CodeMemberField newField = new CodeMemberField(Vector4Ref, fieldName);
+                                        newField.UserData.Add("Type", "Vector4");
+                                        newField.UserData.Add("Name", fieldName);
+                                        CodeMemberProperty newProp = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = Vector4Ref,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newField.Name)));
+                                        newProp.UserData.Add("Type", "Vector4");
+                                        newProp.UserData.Add("Name", propName);
+
+                                        constantBufferClass.Members.Add(newField);
+                                        constantBufferClass.Members.Add(newProp);
+
+                                        complexFields.Add(newField);
+                                        complexProps.Add(newProp);
+
+                                        break;
+                                    }
+                                case "int":
+                                    {
+                                        CodeMemberField newField = new CodeMemberField(intRef, fieldName + "_X");
+                                        newField.UserData.Add("Type", "int");
+                                        newField.UserData.Add("Name", fieldName + "_X");
+                                        CodeMemberProperty newProp = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = intRef,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newField.Name)));
+                                        newProp.UserData.Add("Type", "int");
+                                        newProp.UserData.Add("Name", propName + "_X");
+
+                                        constantBufferClass.Members.Add(newField);
+                                        constantBufferClass.Members.Add(newProp);
+
+                                        primitiveFields.Add(newField);
+                                        primitiveProps.Add(newProp);
+                                        break;
+                                    }
+                                case "int2":
+                                    {
+                                        //X//////////
+                                        CodeMemberField newFieldX = new CodeMemberField(intRef, fieldName + "_X");
+                                        newFieldX.UserData.Add("Type", "int");
+                                        newFieldX.UserData.Add("Name", fieldName + "_X");
+                                        CodeMemberProperty newPropX = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = intRef,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newPropX.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newFieldX.Name)));
+                                        newPropX.UserData.Add("Type", "int");
+                                        newPropX.UserData.Add("Name", propName + "_X");
+
+
+                                        //Y //////
+                                        CodeMemberField newFieldY = new CodeMemberField(intRef, fieldName + "_Y");
+                                        newFieldY.UserData.Add("Type", "int");
+                                        newFieldY.UserData.Add("Name", fieldName + "_Y");
+                                        CodeMemberProperty newPropY = new CodeMemberProperty()
+                                        {
+                                            Attributes = MemberAttributes.Public | MemberAttributes.Final,//final removes the virtual attribute
+                                            Name = propName,
+                                            Type = intRef,
+                                            HasSet = false,
+                                            HasGet = true,
+
+                                        };
+                                        newPropY.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, newFieldY.Name)));
+                                        newPropY.UserData.Add("Type", "int");
+                                        newPropY.UserData.Add("Name", propName + "_Y");
+
+                                        constantBufferClass.Members.Add(newFieldX);
+                                        constantBufferClass.Members.Add(newPropX);
+                                        constantBufferClass.Members.Add(newFieldY);
+                                        constantBufferClass.Members.Add(newPropY);
+
+                                        primitiveFields.Add(newFieldX);
+                                        primitiveProps.Add(newPropX);
+                                        primitiveFields.Add(newFieldY);
+                                        primitiveProps.Add(newPropY);
+                                        
+                                        break; 
+                                    }
+                                case "int3":
+                                    { break; }
+                                case "int4":
+                                    { break; }
+                                case "uint":
+                                    { break; }
+                                case "uint2":
+                                    { break; }
+                                case "uint3":
+                                    { break; }
+                                case "uint4":
+                                    { break; }
+                                case "double":
+                                    { break; }
+                                case "double2":
+                                    { break; }
+                                case "double3":
+                                    { break; }
+                                case "double4":
+                                    { break; }
+                                
+                                  
+                                default: throw new NotSupportedException(variableType.Description.Name + " is not suppoerted");
+                            }
+
                         }
 
                         break;
@@ -213,7 +476,26 @@ namespace ShaderClassGenerator
                         break;
                 }
 
+                //add serilization code
+
+
+                //add constructor code
+
+
+
+                //add equals code
+
+
+                //add to class list
+                cBufferClassList.Add(constantBufferClass);
+
+
             }
+
+            //return classes to codecompile unit
+
+            return cBufferClassList.ToArray();
+
         }
     }
 }

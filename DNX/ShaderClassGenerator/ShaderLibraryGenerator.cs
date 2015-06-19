@@ -21,6 +21,7 @@ namespace ShaderClassGenerator
 
     public class ShaderLibraryGenerator
     {
+        
         public void Generate(string filepath, CompiledShaderReader reader)
         {
             CodeCommentStatement notNeededComment = new CodeCommentStatement("this is generated whether or not it is needed");
@@ -40,10 +41,6 @@ namespace ShaderClassGenerator
             CodeTypeDeclaration targetClass = new CodeTypeDeclaration(Path.GetFileNameWithoutExtension(filepath));
             targetClass.IsClass = true;
             targetClass.TypeAttributes = TypeAttributes.Public;
-
-
-
-            //create a type for the input
 
 
 
@@ -605,8 +602,13 @@ namespace ShaderClassGenerator
             }
             //classes for the constant buffers
 
-            ClassHelper.GenerateConstantBuffers(targetClass,reader.GetConsttantBuffers());
 
+
+            //create a type for the input
+            CodeTypeDeclaration[] cBufferClasses = ClassHelper.GenerateConstantBufferClasses(targetNamespace, reader.GetConsttantBuffers());
+
+            
+           
 
 
             //add samplers to the shaderclass     
