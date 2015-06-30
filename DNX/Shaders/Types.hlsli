@@ -2,6 +2,61 @@
 #if !defined(__TYPES)
 #define __TYPES
 
+/*
+	test code /////////////////////////////////////////
+*/
+
+struct POSTEX
+{
+	float4 pos;
+	float3 tex;
+};
+
+interface IShape
+{
+	POSTEX getPOSTEX(uint vertexID,int size);
+};
+
+static float4 QuadPositions[4] = 
+{
+	float4(-1.0f,1.0f,0.5f,1.0f),
+	float4(1.0f,1.0f,0.5f,1.0f),
+	float4(-1.0f,-1.0f,0.5f,1.0f),
+	float4(1.0f,-1.0f,0.5f,1.0f)
+};
+
+static float3 QuadTexCoords[4] = 
+{
+	float3(0,0,0),
+	float3(1,0,0),
+	float3(0,1,0),
+	float3(1,1,0)
+};
+
+class QuadShape : IShape
+{
+
+
+
+	POSTEX getPOSTEX(uint vertexID,int size)
+	{
+
+		POSTEX output;
+
+		int v = vertexID % 4; // 0 1 2 3
+
+		output.pos = QuadPositions[v];
+		output.tex = QuadTexCoords[v];
+
+		return output;
+	}
+	
+};
+
+
+/*
+	///////////////////////////////////////////////////
+*/
 
 //vertex used for rendering a simple quad
 struct VS_IN_QUAD

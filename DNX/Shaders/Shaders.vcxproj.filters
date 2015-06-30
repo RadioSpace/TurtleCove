@@ -23,5 +23,6 @@
     <None Include="Types.hlsli">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="Header.hlsli" />
   </ItemGroup>
 </Project>

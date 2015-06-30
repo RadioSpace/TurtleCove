@@ -24,32 +24,29 @@ namespace ShaderClassGenerator
         
         public void Generate(string filepath, CompiledShaderReader reader)
         {
-            CodeCommentStatement notNeededComment = new CodeCommentStatement("this is generated whether or not it is needed");
+           CodeCommentStatement notNeededComment = new CodeCommentStatement("this is generated whether or not it is needed");
 
 
-            string classname = Path.GetFileNameWithoutExtension(filepath);
-            string outputfilename = Path.ChangeExtension(filepath, ".cs");
+           string classname = Path.GetFileNameWithoutExtension(filepath);
+           string outputfilename = Path.ChangeExtension(filepath, ".cs");
 
-            CodeCompileUnit targetUnit = new CodeCompileUnit();
-
-
-
-            CodeNamespace targetNamespace = new CodeNamespace("ShaderClasses");
-            SetCommonImports(targetNamespace);
-
-
-            CodeTypeDeclaration targetClass = new CodeTypeDeclaration(Path.GetFileNameWithoutExtension(filepath));
-            targetClass.IsClass = true;
-            targetClass.TypeAttributes = TypeAttributes.Public;
+           CodeCompileUnit targetUnit = new CodeCompileUnit();
 
 
 
+           CodeNamespace targetNamespace = new CodeNamespace("ShaderClasses");
+           SetCommonImports(targetNamespace);
 
-            if (reader.IsVertexShader)
+
+           CodeTypeDeclaration targetClass = new CodeTypeDeclaration(Path.GetFileNameWithoutExtension(filepath));
+           targetClass.IsClass = true;
+           targetClass.TypeAttributes = TypeAttributes.Public;
+
+
+
+
+           if (reader.IsVertexShader)
             {
-                //BUG: need to not make a vertex class if the Input is only SV_VertexID as this indicates that the vertex shader is not using a vetrex buffer
-
-
                 //add a the input layout field
 
                 CodeMemberField inputLayoutMemberField = new CodeMemberField("InputLayout", "inputLayout");
@@ -86,12 +83,13 @@ namespace ShaderClassGenerator
                         string propertyname = new string(paramdesc.SemanticName.Take(1).ToArray()) + new string(paramdesc.SemanticName.ToLower().Skip(1).ToArray()) + paramdesc.SemanticIndex.ToString();//this may change if I find a better way to generate unique names that make sense
                         string fieldName = "_" + propertyname;
 
+                        //NOTE: this contains the constructor code for all the fields as well
+
 
                         //Usage Mask was not set-up correctly in SharpDX so we need to mask it to get the expected results
                         //https://github.com/sharpdx/SharpDX/issues/565
-
-                        int wtf = (int)paramdesc.UsageMask;
-                        int wtf2 = wtf & (int)RegisterComponentMaskFlags.All;
+                        
+                        int UsageMask = ((int)paramdesc.UsageMask) & (int)RegisterComponentMaskFlags.All;
 
                         CodeMemberField iFX = new CodeMemberField(typeof(float), fieldName + "_X");
                         iFX.UserData.Add("Type", "float");
@@ -230,7 +228,7 @@ namespace ShaderClassGenerator
                         iUWProp.UserData.Add("Type", "uint");
                         iUWProp.UserData.Add("Name", fieldName + "_W");
 
-                        switch (wtf2)
+                        switch (UsageMask)
                         {
                             case (int)RegisterComponentMaskFlags.ComponentX:
 
@@ -585,10 +583,7 @@ namespace ShaderClassGenerator
 
                         vertexClass.Members.Add(serializeMethod);
                         vertexClass.Members.Add(serializationConstructor);
-                        vertexClass.Members.Add(Constructor);
-
-
-                       
+                        vertexClass.Members.Add(Constructor);                       
                     }
 
                     //generate Equality code
@@ -600,22 +595,40 @@ namespace ShaderClassGenerator
                 }
 
             }
-            //classes for the constant buffers
 
-
-
-            //create a type for the input
-            CodeTypeDeclaration[] cBufferClasses = ClassHelper.GenerateConstantBufferClasses(targetNamespace, reader.GetConsttantBuffers());
+           //add constant buffer classes
 
             
+
+           CodeTypeDeclaration[] cBufferClasses = ClassHelper.GenerateConstantBufferClasses(reader.GetConsttantBuffers());
+           targetNamespace.Types.AddRange(cBufferClasses);
+          
+            //think i want to index classes directly  rather than use this linq crap
+           targetClass.Members.AddRange(cBufferClasses.ToList().ConvertAll(a => new CodeMemberField(a.Name, "_" + a.Name)).ToArray());
+           targetClass.Members.AddRange(
+               cBufferClasses.ToList().ConvertAll(a =>
+                   {
+                       CodeMemberProperty result  = new CodeMemberProperty();
+                       result.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                       result.Type = new CodeTypeReference(a.Name);
+                       result.Name = a.Name;
+                       result.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, "_" + a.Name)));
+
+                       return result;
+
+                   }).ToArray());
+
+
+
+          
            
 
 
             //add samplers to the shaderclass     
 
+            //add directX objects 
 
-
-
+            //add dispose code
 
 
 

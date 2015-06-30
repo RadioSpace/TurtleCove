@@ -100,10 +100,438 @@ namespace ShaderClasses
         }
     }
     
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Size=80)]
+    public class SimpleArgs : System.Runtime.Serialization.ISerializable, IEquatable<SimpleArgs>
+    {
+        
+        private SharpDX.Matrix _p;
+        
+        private uint _dickhead_X;
+        
+        private SimpleArgs(SerializationInfo info, StreamingContext context)
+        {
+            _p = new Matrix(info.GetSingle("_p_M11"), info.GetSingle("_p_M12"), info.GetSingle("_p_M13"), info.GetSingle("_p_M14"), info.GetSingle("_p_M21"), info.GetSingle("_p_M22"), info.GetSingle("_p_M23"), info.GetSingle("_p_M24"), info.GetSingle("_p_M31"), info.GetSingle("_p_M32"), info.GetSingle("_p_M33"), info.GetSingle("_p_M34"), info.GetSingle("_p_M41"), info.GetSingle("_p_M42"), info.GetSingle("_p_M43"), info.GetSingle("_p_M44"));
+            _dickhead_X = info.GetUInt32("_dickhead_X");
+        }
+        
+        public SimpleArgs(SharpDX.Matrix _p_, uint _dickhead_X_)
+        {
+            _p = _p_;
+            _dickhead_X = _dickhead_X_;
+        }
+        
+        public SharpDX.Matrix P
+        {
+            get
+            {
+                return _p;
+            }
+        }
+        
+        public uint Dickhead_X
+        {
+            get
+            {
+                return _dickhead_X;
+            }
+        }
+        
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_p_M11", _p.M11);
+            info.AddValue("_p_M12", _p.M12);
+            info.AddValue("_p_M13", _p.M13);
+            info.AddValue("_p_M14", _p.M14);
+            info.AddValue("_p_M21", _p.M21);
+            info.AddValue("_p_M22", _p.M22);
+            info.AddValue("_p_M23", _p.M23);
+            info.AddValue("_p_M24", _p.M24);
+            info.AddValue("_p_M31", _p.M31);
+            info.AddValue("_p_M32", _p.M32);
+            info.AddValue("_p_M33", _p.M33);
+            info.AddValue("_p_M34", _p.M34);
+            info.AddValue("_p_M41", _p.M41);
+            info.AddValue("_p_M42", _p.M42);
+            info.AddValue("_p_M43", _p.M43);
+            info.AddValue("_p_M44", _p.M44);
+            info.AddValue("_dickhead_X", _dickhead_X);
+        }
+        
+        public bool Equals(SimpleArgs other)
+        {
+            return (other.P == P) && (other.P == P) && (other.Dickhead_X == Dickhead_X);
+        }
+        
+        public override bool Equals(object other)
+        {
+            if (other is SimpleArgs)
+            {
+                return Equals(other);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        public static bool operator==(SimpleArgs a, SimpleArgs b)
+        {
+            return a.Equals(b);
+        }
+        
+        public static bool operator!=(SimpleArgs a, SimpleArgs b)
+        {
+            return !a.Equals(b);
+        }
+        
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 31 + P.GetHashCode();
+            return hash * 31 + Dickhead_X.GetHashCode();
+        }
+    }
+    
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Size=96)]
+    public class DifferentArgs : System.Runtime.Serialization.ISerializable, IEquatable<DifferentArgs>
+    {
+        
+        private SharpDX.Matrix _wv;
+        
+        private int _e_X;
+        
+        private int _e_Y;
+        
+        private int _e_Z;
+        
+        private int _e_W;
+        
+        private float _ufl_X;
+        
+        private float _sfl_X;
+        
+        private float _ffl_X;
+        
+        private DifferentArgs(SerializationInfo info, StreamingContext context)
+        {
+            _wv = new Matrix(info.GetSingle("_wv_M11"), info.GetSingle("_wv_M12"), info.GetSingle("_wv_M13"), info.GetSingle("_wv_M14"), info.GetSingle("_wv_M21"), info.GetSingle("_wv_M22"), info.GetSingle("_wv_M23"), info.GetSingle("_wv_M24"), info.GetSingle("_wv_M31"), info.GetSingle("_wv_M32"), info.GetSingle("_wv_M33"), info.GetSingle("_wv_M34"), info.GetSingle("_wv_M41"), info.GetSingle("_wv_M42"), info.GetSingle("_wv_M43"), info.GetSingle("_wv_M44"));
+            _e_X = info.GetInt32("_e_X");
+            _e_Y = info.GetInt32("_e_Y");
+            _e_Z = info.GetInt32("_e_Z");
+            _e_W = info.GetInt32("_e_W");
+            _ufl_X = info.GetSingle("_ufl_X");
+            _sfl_X = info.GetSingle("_sfl_X");
+            _ffl_X = info.GetSingle("_ffl_X");
+        }
+        
+        public DifferentArgs(SharpDX.Matrix _wv_, int _e_X_, int _e_Y_, int _e_Z_, int _e_W_, float _ufl_X_, float _sfl_X_, float _ffl_X_)
+        {
+            _wv = _wv_;
+            _e_X = _e_X_;
+            _e_Y = _e_Y_;
+            _e_Z = _e_Z_;
+            _e_W = _e_W_;
+            _ufl_X = _ufl_X_;
+            _sfl_X = _sfl_X_;
+            _ffl_X = _ffl_X_;
+        }
+        
+        public SharpDX.Matrix Wv
+        {
+            get
+            {
+                return _wv;
+            }
+        }
+        
+        public int E_X
+        {
+            get
+            {
+                return _e_X;
+            }
+        }
+        
+        public int E_Y
+        {
+            get
+            {
+                return _e_Y;
+            }
+        }
+        
+        public int E_Z
+        {
+            get
+            {
+                return _e_Z;
+            }
+        }
+        
+        public int E_W
+        {
+            get
+            {
+                return _e_W;
+            }
+        }
+        
+        public float Ufl_X
+        {
+            get
+            {
+                return _ufl_X;
+            }
+        }
+        
+        public float Sfl_X
+        {
+            get
+            {
+                return _sfl_X;
+            }
+        }
+        
+        public float Ffl_X
+        {
+            get
+            {
+                return _ffl_X;
+            }
+        }
+        
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_wv_M11", _wv.M11);
+            info.AddValue("_wv_M12", _wv.M12);
+            info.AddValue("_wv_M13", _wv.M13);
+            info.AddValue("_wv_M14", _wv.M14);
+            info.AddValue("_wv_M21", _wv.M21);
+            info.AddValue("_wv_M22", _wv.M22);
+            info.AddValue("_wv_M23", _wv.M23);
+            info.AddValue("_wv_M24", _wv.M24);
+            info.AddValue("_wv_M31", _wv.M31);
+            info.AddValue("_wv_M32", _wv.M32);
+            info.AddValue("_wv_M33", _wv.M33);
+            info.AddValue("_wv_M34", _wv.M34);
+            info.AddValue("_wv_M41", _wv.M41);
+            info.AddValue("_wv_M42", _wv.M42);
+            info.AddValue("_wv_M43", _wv.M43);
+            info.AddValue("_wv_M44", _wv.M44);
+            info.AddValue("_e_X", _e_X);
+            info.AddValue("_e_Y", _e_Y);
+            info.AddValue("_e_Z", _e_Z);
+            info.AddValue("_e_W", _e_W);
+            info.AddValue("_ufl_X", _ufl_X);
+            info.AddValue("_sfl_X", _sfl_X);
+            info.AddValue("_ffl_X", _ffl_X);
+        }
+        
+        public bool Equals(DifferentArgs other)
+        {
+            return (other.Wv == Wv) && (other.Wv == Wv) && (other.Wv == Wv) && (other.Wv == Wv) && (other.Wv == Wv) && (other.Wv == Wv) && (other.Wv == Wv) && (other.Wv == Wv) && (other.E_X == E_X) && (other.E_X == E_X) && (other.E_X == E_X) && (other.E_X == E_X) && (other.E_X == E_X) && (other.E_X == E_X) && (other.E_X == E_X) && (other.E_Y == E_Y) && (other.E_Y == E_Y) && (other.E_Y == E_Y) && (other.E_Y == E_Y) && (other.E_Y == E_Y) && (other.E_Y == E_Y) && (other.E_Z == E_Z) && (other.E_Z == E_Z) && (other.E_Z == E_Z) && (other.E_Z == E_Z) && (other.E_Z == E_Z) && (other.E_W == E_W) && (other.E_W == E_W) && (other.E_W == E_W) && (other.E_W == E_W) && (other.Ufl_X == Ufl_X) && (other.Ufl_X == Ufl_X) && (other.Ufl_X == Ufl_X) && (other.Sfl_X == Sfl_X) && (other.Sfl_X == Sfl_X) && (other.Ffl_X == Ffl_X);
+        }
+        
+        public override bool Equals(object other)
+        {
+            if (other is DifferentArgs)
+            {
+                return Equals(other);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        public static bool operator==(DifferentArgs a, DifferentArgs b)
+        {
+            return a.Equals(b);
+        }
+        
+        public static bool operator!=(DifferentArgs a, DifferentArgs b)
+        {
+            return !a.Equals(b);
+        }
+        
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 31 + Wv.GetHashCode();
+            hash = hash * 31 + E_X.GetHashCode();
+            hash = hash * 31 + E_Y.GetHashCode();
+            hash = hash * 31 + E_Z.GetHashCode();
+            hash = hash * 31 + E_W.GetHashCode();
+            hash = hash * 31 + Ufl_X.GetHashCode();
+            hash = hash * 31 + Sfl_X.GetHashCode();
+            return hash * 31 + Ffl_X.GetHashCode();
+        }
+    }
+    
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Size=64)]
+    public class looploop : System.Runtime.Serialization.ISerializable, IEquatable<looploop>
+    {
+        
+        private float _scale_X;
+        
+        private float _buttScale_X;
+        
+        private SharpDX.Vector4 _pos;
+        
+        private SharpDX.Vector4 _tex;
+        
+        private SharpDX.Vector3 _pos3D;
+        
+        private looploop(SerializationInfo info, StreamingContext context)
+        {
+            _scale_X = info.GetSingle("_scale_X");
+            _buttScale_X = info.GetSingle("_buttScale_X");
+            _pos = new Vector4(info.GetSingle("_pos_X"),info.GetSingle("_pos_Y"), info.GetSingle("_pos_Z"), info.GetSingle("_pos_W"));
+            _tex = new Vector4(info.GetSingle("_tex_X"),info.GetSingle("_tex_Y"), info.GetSingle("_tex_Z"), info.GetSingle("_tex_W"));
+            _pos3D = new Vector3(info.GetSingle("_pos3D_X"),info.GetSingle("_pos3D_Y"), info.GetSingle("_pos3D_Z"));
+        }
+        
+        public looploop(float _scale_X_, float _buttScale_X_, SharpDX.Vector4 _pos_, SharpDX.Vector4 _tex_, SharpDX.Vector3 _pos3D_)
+        {
+            _scale_X = _scale_X_;
+            _buttScale_X = _buttScale_X_;
+            _pos = _pos_;
+            _tex = _tex_;
+            _pos3D = _pos3D_;
+        }
+        
+        public float Scale_X
+        {
+            get
+            {
+                return _scale_X;
+            }
+        }
+        
+        public float Buttscale_X
+        {
+            get
+            {
+                return _buttScale_X;
+            }
+        }
+        
+        public SharpDX.Vector4 Pos
+        {
+            get
+            {
+                return _pos;
+            }
+        }
+        
+        public SharpDX.Vector4 Tex
+        {
+            get
+            {
+                return _tex;
+            }
+        }
+        
+        public SharpDX.Vector3 Pos3d
+        {
+            get
+            {
+                return _pos3D;
+            }
+        }
+        
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_scale_X", _scale_X);
+            info.AddValue("_buttScale_X", _buttScale_X);
+            info.AddValue("_pos_X", _pos.X);
+            info.AddValue("_pos_Y", _pos.Y);
+            info.AddValue("_pos_Z", _pos.Z);
+            info.AddValue("_pos_W", _pos.W);
+            info.AddValue("_tex_X", _tex.X);
+            info.AddValue("_tex_Y", _tex.Y);
+            info.AddValue("_tex_Z", _tex.Z);
+            info.AddValue("_tex_W", _tex.W);
+            info.AddValue("_pos3D_X", _pos3D.X);
+            info.AddValue("_pos3D_Y", _pos3D.Y);
+            info.AddValue("_pos3D_Z", _pos3D.Z);
+        }
+        
+        public bool Equals(looploop other)
+        {
+            return (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Buttscale_X == Buttscale_X) && (other.Buttscale_X == Buttscale_X) && (other.Buttscale_X == Buttscale_X) && (other.Buttscale_X == Buttscale_X) && (other.Pos == Pos) && (other.Pos == Pos) && (other.Pos == Pos) && (other.Tex == Tex) && (other.Tex == Tex) && (other.Pos3d == Pos3d);
+        }
+        
+        public override bool Equals(object other)
+        {
+            if (other is looploop)
+            {
+                return Equals(other);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        public static bool operator==(looploop a, looploop b)
+        {
+            return a.Equals(b);
+        }
+        
+        public static bool operator!=(looploop a, looploop b)
+        {
+            return !a.Equals(b);
+        }
+        
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 31 + Scale_X.GetHashCode();
+            hash = hash * 31 + Buttscale_X.GetHashCode();
+            hash = hash * 31 + Pos.GetHashCode();
+            hash = hash * 31 + Tex.GetHashCode();
+            return hash * 31 + Pos3d.GetHashCode();
+        }
+    }
+    
     public class TestVertexShader
     {
         
         // this is generated whether or not it is needed
         private InputLayout inputLayout;
+        
+        private SimpleArgs _SimpleArgs;
+        
+        private DifferentArgs _DifferentArgs;
+        
+        private looploop _looploop;
+        
+        public SimpleArgs SimpleArgs
+        {
+            get
+            {
+                return _SimpleArgs;
+            }
+        }
+        
+        public DifferentArgs DifferentArgs
+        {
+            get
+            {
+                return _DifferentArgs;
+            }
+        }
+        
+        public looploop looploop
+        {
+            get
+            {
+                return _looploop;
+            }
+        }
     }
 }
