@@ -73,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell Tests.cs" />
     <Compile Include="ShaderLibraryGeneratorTests.cs" />
+    <Compile Include="VectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DNX\drc_games.csproj">

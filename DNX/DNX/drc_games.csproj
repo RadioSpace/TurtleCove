@@ -60,9 +60,18 @@
     <Compile Include="Util\IVertexShaderDevice.cs" />
     <Compile Include="Util\OutputDevice.cs" />
     <Compile Include="Util\UtilityDevice.cs" />
+    <Compile Include="VectorGraphics\GLine.cs" />
+    <Compile Include="VectorGraphics\ImageAnalyzer.cs" />
+    <Compile Include="VectorGraphics\VectorGraphic.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="VertexShaders\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Util\VectorizeTest.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="VectorGraphics\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

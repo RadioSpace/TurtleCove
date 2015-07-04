@@ -24,11 +24,16 @@ namespace DNX.Util
 
         #endregion
 
+        //the device
         Device d;
+
+
         /// <summary>
         /// gets the Device
+        /// replaced by implicit cast
         /// </summary>
-        public Device GraphicsDevice { get { return d; } }
+        //public Device GraphicsDevice { get { return d; } }
+        
         /// <summary>
         /// gets the device context
         /// </summary>
@@ -53,6 +58,11 @@ namespace DNX.Util
             {
                 if (d != null) d.Dispose();
             }
+        }
+
+        public static implicit operator Device(UtilityDevice ud)
+        {
+            return ud.d;
         }
     }
 }
