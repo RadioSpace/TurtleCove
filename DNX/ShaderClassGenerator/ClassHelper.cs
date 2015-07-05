@@ -1338,7 +1338,7 @@ namespace ShaderClassGenerator
         /// </summary>
         /// <param name="codeClass"></param>
         /// <param name="members"></param>
-        static void MakeSerilizable(CodeTypeDeclaration codeClass)
+        public static void MakeSerilizable(CodeTypeDeclaration codeClass)
         {
 
             //initilize Iserializable object

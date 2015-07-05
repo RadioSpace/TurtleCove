@@ -21,6 +21,7 @@ namespace DNX.Util
         #region static
 
         static object locker = new object();
+        
 
         #endregion
 

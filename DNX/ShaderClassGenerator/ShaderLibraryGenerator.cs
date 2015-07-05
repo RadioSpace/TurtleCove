@@ -471,119 +471,9 @@ namespace ShaderClassGenerator
                     //build serialization method
                     if (Vectors.Count > 0)
                     {
-                        //implement Iserializable
-                        vertexClass.BaseTypes.Add(typeof(ISerializable));
 
-
-                        //create serilization params Implemented by ISerializable
-                        CodeParameterDeclarationExpression serializeParam1 = new CodeParameterDeclarationExpression("SerializationInfo", "info");
-                        CodeParameterDeclarationExpression serializeParam2 = new CodeParameterDeclarationExpression("StreamingContext", "context");
-
-                        //add serilization code
-                        CodeMemberMethod serializeMethod = new CodeMemberMethod();
-                        serializeMethod.Name = "GetObjectData";
-                        serializeMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-                        serializeMethod.Parameters.Add(serializeParam1);
-                        serializeMethod.Parameters.Add(serializeParam2);
-
-
-
-                        CodeConstructor serializationConstructor = new CodeConstructor();
-                        serializationConstructor.Parameters.Add(serializeParam1);
-                        serializationConstructor.Parameters.Add(serializeParam2);
-
-                        CodeConstructor Constructor = new CodeConstructor();
-                        Constructor.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-
-
-
-                        //add fields code
-
-
-
-                        foreach (CodeMemberField field in Vectors)
-                        {
-                            string typeString = (string)field.UserData["Type"];
-                            string fName = (string)field.UserData["Name"];
-                            string argName = fName + "_";
-
-                            Constructor.Statements.Add(new CodeSnippetExpression(fName + " = " + argName));
-
-                            switch (typeString)
-                            {
-                                case "Vector2":
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_X\", " + fName + ".X)"));
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_Y\", " + fName + ".Y)"));
-
-                                    serializationConstructor.Statements.Add(new CodeSnippetExpression(fName + " = new Vector2(info.GetSingle(\"" + fName + "_X\"),info.GetSingle(\"" + fName + "_Y\"))"));
-                                    
-                                    Constructor.Parameters.Add(new CodeParameterDeclarationExpression("Vector2", argName));
-                                    
-                                    break;
-                                case "Vector3":
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_X\", " + fName + ".X)"));
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_Y\", " + fName + ".Y)"));
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_Z\", " + fName + ".Z)"));
-
-                                    serializationConstructor.Statements.Add(new CodeSnippetExpression(fName + " = new Vector3(info.GetSingle(\"" + fName + "_X\"),info.GetSingle(\"" + fName + "_Y\"), info.GetSingle(\"" + fName + "_Z\"))"));
-
-                                    
-
-                                    Constructor.Parameters.Add(new CodeParameterDeclarationExpression("Vector3", argName));
-                                    
-                                    break;
-                                case "Vector4":
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_X\", " + fName + ".X)"));
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_Y\", " + fName + ".Y)"));
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_Z\", " + fName + ".Z)"));
-                                    serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "_W\", " + fName + ".W)"));
-
-                                    serializationConstructor.Statements.Add(new CodeSnippetExpression(fName + " = new Vector4(info.GetSingle(\"" + fName + "_X\"),info.GetSingle(\"" + fName + "_Y\"), info.GetSingle(\"" + fName + "_Z\"), info.GetSingle(\"" + fName + "_W\"))"));
-
-                                    Constructor.Parameters.Add(new CodeParameterDeclarationExpression("Vector4", argName));
-                                    
-
-                                    break;
-                                default: throw new NotImplementedException("the type " + typeString + ", is not supported");
-                            }
-
-                        }
-
-                        foreach (CodeMemberField field in OtherMembers)
-                        {
-                            string typeString = (string)field.UserData["Type"];
-                            string fName = (string)field.UserData["Name"];
-                            string argName = fName +"_";
-
-                            serializeMethod.Statements.Add(new CodeSnippetExpression("info.AddValue(\"" + fName + "\", " + fName + ")"));
-                            Constructor.Statements.Add(new CodeSnippetExpression(fName + " = " + argName));
-
-                            switch (typeString)
-                            {
-                                case "int":
-                                    serializationConstructor.Statements.Add(new CodeSnippetExpression(fName + " = info.GetInt32(\"" + fName + "\")"));
-                                    Constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(int), argName));
-                                    break;
-                                case "uint":
-                                    serializationConstructor.Statements.Add(new CodeSnippetExpression(fName + " = info.GetUInt32(\"" + fName + "\")"));
-                                    Constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(uint), argName));
-                                    break;
-                                case "float":
-                                    serializationConstructor.Statements.Add(new CodeSnippetExpression(fName + " = info.GetSingle(\"" + fName + "\")"));
-                                    Constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(float), argName));
-                                    break;
-                                default:
-                                    break;
-
-                            }
-                        }
-
-
-                        //Add serilization method
-
-                        vertexClass.Members.Add(serializeMethod);
-                        vertexClass.Members.Add(serializationConstructor);
-                        vertexClass.Members.Add(Constructor);                       
+                        ClassHelper.MakeSerilizable(vertexClass);
+                       
                     }
 
                     //generate Equality code
@@ -603,7 +493,7 @@ namespace ShaderClassGenerator
            CodeTypeDeclaration[] cBufferClasses = ClassHelper.GenerateConstantBufferClasses(reader.GetConsttantBuffers());
            targetNamespace.Types.AddRange(cBufferClasses);
           
-            //think i want to index classes directly  rather than use this linq crap
+            
            targetClass.Members.AddRange(cBufferClasses.ToList().ConvertAll(a => new CodeMemberField(a.Name, "_" + a.Name)).ToArray());
            targetClass.Members.AddRange(
                cBufferClasses.ToList().ConvertAll(a =>
@@ -625,6 +515,8 @@ namespace ShaderClassGenerator
 
 
             //add samplers to the shaderclass     
+
+
 
             //add directX objects 
 

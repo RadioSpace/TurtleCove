@@ -33,12 +33,6 @@ namespace ShaderClasses
             _Texcoord0 = new Vector2(info.GetSingle("_Texcoord0_X"),info.GetSingle("_Texcoord0_Y"));
         }
         
-        public TestVertexShader_Vertex(Vector4 _Position0_, Vector2 _Texcoord0_)
-        {
-            _Position0 = _Position0_;
-            _Texcoord0 = _Texcoord0_;
-        }
-        
         public SharpDX.Vector4 Position0
         {
             get
