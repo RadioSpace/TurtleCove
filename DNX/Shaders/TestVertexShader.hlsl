@@ -38,7 +38,6 @@ VS_OUT main( uint v_id : SV_VertexID )
 
 
 
-
 cbuffer SimpleArgs : register(b0)
 {//projection
 	float4x4 p;
@@ -63,18 +62,18 @@ cbuffer looploop: register(b2)
 	float4 pos;
 	float4 tex;
 	float3 pos3D;
-	
-
 };
+
 
 
 
 VS_OUT_STANDARD main(VS_IN_QUAD input)
 {
 	VS_OUT_STANDARD output;
-	
+
+
 	output.pos = mul(mul(input.pos,wv),p);
-	output.tex = pos3D;	
+	output.tex = input.tex;	
 
 	return output;
 }

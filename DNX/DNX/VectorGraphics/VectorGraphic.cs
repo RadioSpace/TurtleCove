@@ -172,6 +172,9 @@ namespace DNX.VectorGraphics
 
             double dataStep = 1.0 / stepWidth;
 
+            //convert to int once instead of every time
+            int rowStep = (int)stepWidth;
+
             for (int y = 0; y < height; y++)
             {
 
@@ -179,26 +182,16 @@ namespace DNX.VectorGraphics
 
                 GLine[] rowData = Xgraph_R[(int)((double)y / stepHeight)].ToArray();
 
-
-
-                for (int i = 0; i < rowData.Length; i++)
+                for (int x = 0; x < width; x += rowStep)
                 {
+                    int end = x + rowStep;
+                    int index = (int)(1);//you are here
 
-                    int startx = (int)(rowData[i].getPosition(0.0) * (double)width);                    
-                    int endx = (int)( rowData[i].getPosition(1.0) * (double)width);                    
-
-                    for (int x = startx; x < endx; x++)
-                    {
-                        double u = (double)x - (double)startx / stepWidth;
-
-                        int index = x * 4;
-
-                        newrow[index] = (byte)(rowData[i].getAmount(u) % 256.0);
-                        newrow[index + 1] = 255;
-                        newrow[index + 2] = 255;
-                        newrow[index + 3] = 255;
+                    GLine line = rowData[index];//0 or 1
+                    for (int d = x; d < end; d++)
+                    { 
+                        
                     }
-
                 }
 
                 imageData.AddRange(newrow);

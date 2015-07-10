@@ -1119,6 +1119,7 @@ namespace ShaderClassGenerator
                     case ConstantBufferType.InterfacePointers:
 
                         //create a class that stores the ClassInstances
+                        //this will be tricky 
                         for (int x = 0; x < cbuffer.Description.VariableCount; x++)
                         {
                             ShaderReflectionVariable variable = cbuffer.GetVariable(x);
@@ -1128,9 +1129,19 @@ namespace ShaderClassGenerator
                         break;
                     case ConstantBufferType.ResourceBindInformation:
                         //??
+                        for (int x = 0; x < cbuffer.Description.VariableCount; x++)
+                        {
+                            ShaderReflectionVariable variable = cbuffer.GetVariable(x);
+                            ShaderReflectionType variableType = variable.GetVariableType();
+                        }
                         break;
                     case ConstantBufferType.TextureBuffer:
                         //Texture2D ??
+                        for (int x = 0; x < cbuffer.Description.VariableCount; x++)
+                        {
+                            ShaderReflectionVariable variable = cbuffer.GetVariable(x);
+                            ShaderReflectionType variableType = variable.GetVariableType();
+                        }
                         break;
                     default:
                         break;
@@ -1527,6 +1538,32 @@ namespace ShaderClassGenerator
 
 
 
+        }
+
+        /// <summary>
+        /// makes the class disposable but does not add the method
+        /// </summary>
+        /// <param name="codeClass">the class to make disposable</param>
+        /// <returns>a Method you will need to add to the class later after you have added the disposal statements</returns>
+        public static CodeMemberMethod MakeDisposable(CodeTypeDeclaration codeClass)
+        {
+            codeClass.BaseTypes.Add(new CodeTypeReference(typeof(IDisposable)));
+
+
+            CodeMemberMethod disposeMethod = new CodeMemberMethod();
+            disposeMethod.Name = "Dispose";
+            disposeMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+
+            return disposeMethod;
+        }
+
+        public static void AddDisposalOfMember(CodeMemberMethod disposeMethod, string memberName)
+        {
+            CodeBinaryOperatorExpression isnull = new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(memberName), CodeBinaryOperatorType.IdentityInequality, new CodePrimitiveExpression(null));
+            CodeExpressionStatement callDispose = new CodeExpressionStatement(new CodeMethodInvokeExpression(new CodeVariableReferenceExpression(memberName), "Dispose"));
+
+            //add dispose code
+            disposeMethod.Statements.Add(new CodeConditionStatement(isnull, callDispose));
         }
     }
 }

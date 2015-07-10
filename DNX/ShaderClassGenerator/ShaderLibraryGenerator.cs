@@ -15,45 +15,49 @@ using System.Runtime.Serialization;
 
 using SharpDX;
 using SharpDX.D3DCompiler;
+using SharpDX.Direct3D11;
 
 namespace ShaderClassGenerator
 {
+    using Buffer = SharpDX.Direct3D11.Buffer;
 
     public class ShaderLibraryGenerator
     {
-        
+
+        //add buffers
+        CodeTypeReference bufferRef = new CodeTypeReference(typeof(Buffer));
+        CodeTypeReference bufferDescriptionRef = new CodeTypeReference(typeof(BufferDescription));
+
+        CodeTypeReference vertexShaderRef = new CodeTypeReference(typeof(VertexShader));
+        CodeTypeReference pixelShaderRef = new CodeTypeReference(typeof(PixelShader));
+        CodeTypeReference hullShaderRef = new CodeTypeReference(typeof(HullShader));
+        CodeTypeReference domainShaderRef = new CodeTypeReference(typeof(DomainShader));
+        CodeTypeReference geometryShaderRef = new CodeTypeReference(typeof(GeometryShader));
+
+
         public void Generate(string filepath, CompiledShaderReader reader)
         {
-           CodeCommentStatement notNeededComment = new CodeCommentStatement("this is generated whether or not it is needed");
 
+            string classname = Path.GetFileNameWithoutExtension(filepath);
+            string outputfilename = Path.ChangeExtension(filepath, ".cs");
 
-           string classname = Path.GetFileNameWithoutExtension(filepath);
-           string outputfilename = Path.ChangeExtension(filepath, ".cs");
-
-           CodeCompileUnit targetUnit = new CodeCompileUnit();
-
-
-
-           CodeNamespace targetNamespace = new CodeNamespace("ShaderClasses");
-           SetCommonImports(targetNamespace);
-
-
-           CodeTypeDeclaration targetClass = new CodeTypeDeclaration(Path.GetFileNameWithoutExtension(filepath));
-           targetClass.IsClass = true;
-           targetClass.TypeAttributes = TypeAttributes.Public;
+            CodeCompileUnit targetUnit = new CodeCompileUnit();
 
 
 
+            CodeNamespace targetNamespace = new CodeNamespace("ShaderClasses");
+            SetCommonImports(targetNamespace);
 
-           if (reader.IsVertexShader)
+
+            CodeTypeDeclaration targetClass = new CodeTypeDeclaration(Path.GetFileNameWithoutExtension(filepath));
+            targetClass.IsClass = true;
+            targetClass.TypeAttributes = TypeAttributes.Public;
+
+            CodeMemberMethod disposeMethod = ClassHelper.MakeDisposable(targetClass);
+
+
+            if (reader.IsVertexShader)
             {
-                //add a the input layout field
-
-                CodeMemberField inputLayoutMemberField = new CodeMemberField("InputLayout", "inputLayout");
-                inputLayoutMemberField.Comments.Add(notNeededComment);
-
-                targetClass.Members.Add(inputLayoutMemberField);
-
 
                 //create a class to store vertex  information
                 CodeTypeDeclaration vertexClass = new CodeTypeDeclaration(targetClass.Name + "_Vertex");
@@ -77,6 +81,12 @@ namespace ShaderClassGenerator
                 }
                 else
                 {
+                    //add a the input layout field
+                    CodeMemberField inputLayoutMemberField = new CodeMemberField("InputLayout", "inputLayout");
+                    targetClass.Members.Add(inputLayoutMemberField);
+                    ClassHelper.AddDisposalOfMember(disposeMethod, inputLayoutMemberField.Name);
+
+
                     //read the vertex input parameters
                     foreach (ShaderParameterDescription paramdesc in paramdesciptions)
                     {
@@ -88,7 +98,7 @@ namespace ShaderClassGenerator
 
                         //Usage Mask was not set-up correctly in SharpDX so we need to mask it to get the expected results
                         //https://github.com/sharpdx/SharpDX/issues/565
-                        
+
                         int UsageMask = ((int)paramdesc.UsageMask) & (int)RegisterComponentMaskFlags.All;
 
                         CodeMemberField iFX = new CodeMemberField(typeof(float), fieldName + "_X");
@@ -101,7 +111,7 @@ namespace ShaderClassGenerator
                             Type = new CodeTypeReference(typeof(float)),
                             HasSet = false,
                             HasGet = true,
-                            
+
                         };
                         iFXProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, iFX.Name)));
                         iFXProp.UserData.Add("Type", "int");
@@ -463,7 +473,7 @@ namespace ShaderClassGenerator
                         new CodeAttributeDeclaration("StructLayout",new CodeAttributeArgument[]
                         {
                             new CodeAttributeArgument(new CodeSnippetExpression("LayoutKind.Sequential")),
-                            new CodeAttributeArgument("Size",new CodeSnippetExpression(sizeInBytes.ToString()))
+                            new CodeAttributeArgument("Size",new CodeSnippetExpression(sizeInBytes.ToString()))//this will need normalized to a multiple of 16(BYTE)
                         }),
                     });
 
@@ -473,7 +483,7 @@ namespace ShaderClassGenerator
                     {
 
                         ClassHelper.MakeSerilizable(vertexClass);
-                       
+
                     }
 
                     //generate Equality code
@@ -486,32 +496,13 @@ namespace ShaderClassGenerator
 
             }
 
-           //add constant buffer classes
+            //add constant buffer classes           
 
-            
-
-           CodeTypeDeclaration[] cBufferClasses = ClassHelper.GenerateConstantBufferClasses(reader.GetConsttantBuffers());
-           targetNamespace.Types.AddRange(cBufferClasses);
-          
-            
-           targetClass.Members.AddRange(cBufferClasses.ToList().ConvertAll(a => new CodeMemberField(a.Name, "_" + a.Name)).ToArray());
-           targetClass.Members.AddRange(
-               cBufferClasses.ToList().ConvertAll(a =>
-                   {
-                       CodeMemberProperty result  = new CodeMemberProperty();
-                       result.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-                       result.Type = new CodeTypeReference(a.Name);
-                       result.Name = a.Name;
-                       result.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, "_" + a.Name)));
-
-                       return result;
-
-                   }).ToArray());
+            CodeTypeDeclaration[] cBufferClasses = ClassHelper.GenerateConstantBufferClasses(reader.GetConsttantBuffers());
+            targetNamespace.Types.AddRange(cBufferClasses);
 
 
 
-          
-           
 
 
             //add samplers to the shaderclass     
@@ -520,8 +511,72 @@ namespace ShaderClassGenerator
 
             //add directX objects 
 
-            //add dispose code
+            //add the correct Shader class
 
+            string shaderName = "NULL";
+            switch (reader.TypePrefix)
+            {
+                case "vs":
+                    {
+                        shaderName = "vertexShader";
+                        targetClass.Members.Add(new CodeMemberField(vertexShaderRef, shaderName));
+
+                        break;
+                    }
+                case "ps":
+                    {
+                        shaderName = "pixelShader";
+                        targetClass.Members.Add(new CodeMemberField(pixelShaderRef, shaderName));
+
+                        break;
+                    }
+                case "ds":
+                    {
+                        shaderName = "domainShader";
+                        targetClass.Members.Add(new CodeMemberField(domainShaderRef, shaderName));
+
+                        break;
+                    }
+                case "hs":
+                    {
+                        shaderName = "hullShader";
+                        targetClass.Members.Add(new CodeMemberField(hullShaderRef, shaderName));
+
+                        break;
+                    }
+                case "gs":
+                    {
+                        shaderName = "geometryShader";
+                        targetClass.Members.Add(new CodeMemberField(geometryShaderRef, shaderName));
+                        break;
+                    }
+                
+            }
+
+            if (shaderName != "NULL")
+            {
+                ClassHelper.AddDisposalOfMember(disposeMethod, shaderName);
+            }
+            else throw new Exception("unrecognized Shader prefix. check the shader profile in the reader code");
+
+
+
+            foreach (CodeTypeDeclaration cbuffer in cBufferClasses)
+            {
+                string bufferName = cbuffer.Name.ToLower() + "Buffer";
+
+                targetClass.Members.Add(new CodeMemberField(bufferRef, bufferName));
+
+                ClassHelper.AddDisposalOfMember(disposeMethod, bufferName);
+            }
+
+            //add buffer assignment methods
+
+            //add others
+
+
+            //add dispose method
+            targetClass.Members.Add(disposeMethod);
 
 
 
@@ -543,6 +598,8 @@ namespace ShaderClassGenerator
                 }
             }
         }
+
+
 
 
         private static void SetCommonImports(CodeNamespace targetNamespace)

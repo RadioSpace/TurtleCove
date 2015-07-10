@@ -22,7 +22,7 @@ namespace Laboratory
 
             MemoryStream ms = new MemoryStream();
 
-            TestVertexShader_Vertex testWriteVertex = new TestVertexShader_Vertex(new Vector4(0, 1, 0, 1), new Vector2(0,1));
+            TestVertexShader_Vertex testWriteVertex = new TestVertexShader_Vertex();
             TestVertexShader_Vertex testReadVertex;
 
             bf.Serialize(ms,testWriteVertex);

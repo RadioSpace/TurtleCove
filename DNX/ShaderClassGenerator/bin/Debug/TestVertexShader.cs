@@ -364,167 +364,34 @@ namespace ShaderClasses
         }
     }
     
-    [Serializable()]
-    [StructLayout(LayoutKind.Sequential, Size=64)]
-    public class looploop : System.Runtime.Serialization.ISerializable, IEquatable<looploop>
+    public class TestVertexShader : System.IDisposable
     {
         
-        private float _scale_X;
-        
-        private float _buttScale_X;
-        
-        private SharpDX.Vector4 _pos;
-        
-        private SharpDX.Vector4 _tex;
-        
-        private SharpDX.Vector3 _pos3D;
-        
-        private looploop(SerializationInfo info, StreamingContext context)
-        {
-            _scale_X = info.GetSingle("_scale_X");
-            _buttScale_X = info.GetSingle("_buttScale_X");
-            _pos = new Vector4(info.GetSingle("_pos_X"),info.GetSingle("_pos_Y"), info.GetSingle("_pos_Z"), info.GetSingle("_pos_W"));
-            _tex = new Vector4(info.GetSingle("_tex_X"),info.GetSingle("_tex_Y"), info.GetSingle("_tex_Z"), info.GetSingle("_tex_W"));
-            _pos3D = new Vector3(info.GetSingle("_pos3D_X"),info.GetSingle("_pos3D_Y"), info.GetSingle("_pos3D_Z"));
-        }
-        
-        public looploop(float _scale_X_, float _buttScale_X_, SharpDX.Vector4 _pos_, SharpDX.Vector4 _tex_, SharpDX.Vector3 _pos3D_)
-        {
-            _scale_X = _scale_X_;
-            _buttScale_X = _buttScale_X_;
-            _pos = _pos_;
-            _tex = _tex_;
-            _pos3D = _pos3D_;
-        }
-        
-        public float Scale_X
-        {
-            get
-            {
-                return _scale_X;
-            }
-        }
-        
-        public float Buttscale_X
-        {
-            get
-            {
-                return _buttScale_X;
-            }
-        }
-        
-        public SharpDX.Vector4 Pos
-        {
-            get
-            {
-                return _pos;
-            }
-        }
-        
-        public SharpDX.Vector4 Tex
-        {
-            get
-            {
-                return _tex;
-            }
-        }
-        
-        public SharpDX.Vector3 Pos3d
-        {
-            get
-            {
-                return _pos3D;
-            }
-        }
-        
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("_scale_X", _scale_X);
-            info.AddValue("_buttScale_X", _buttScale_X);
-            info.AddValue("_pos_X", _pos.X);
-            info.AddValue("_pos_Y", _pos.Y);
-            info.AddValue("_pos_Z", _pos.Z);
-            info.AddValue("_pos_W", _pos.W);
-            info.AddValue("_tex_X", _tex.X);
-            info.AddValue("_tex_Y", _tex.Y);
-            info.AddValue("_tex_Z", _tex.Z);
-            info.AddValue("_tex_W", _tex.W);
-            info.AddValue("_pos3D_X", _pos3D.X);
-            info.AddValue("_pos3D_Y", _pos3D.Y);
-            info.AddValue("_pos3D_Z", _pos3D.Z);
-        }
-        
-        public bool Equals(looploop other)
-        {
-            return (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Scale_X == Scale_X) && (other.Buttscale_X == Buttscale_X) && (other.Buttscale_X == Buttscale_X) && (other.Buttscale_X == Buttscale_X) && (other.Buttscale_X == Buttscale_X) && (other.Pos == Pos) && (other.Pos == Pos) && (other.Pos == Pos) && (other.Tex == Tex) && (other.Tex == Tex) && (other.Pos3d == Pos3d);
-        }
-        
-        public override bool Equals(object other)
-        {
-            if (other is looploop)
-            {
-                return Equals(other);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
-        public static bool operator==(looploop a, looploop b)
-        {
-            return a.Equals(b);
-        }
-        
-        public static bool operator!=(looploop a, looploop b)
-        {
-            return !a.Equals(b);
-        }
-        
-        public override int GetHashCode()
-        {
-            int hash = 17;
-            hash = hash * 31 + Scale_X.GetHashCode();
-            hash = hash * 31 + Buttscale_X.GetHashCode();
-            hash = hash * 31 + Pos.GetHashCode();
-            hash = hash * 31 + Tex.GetHashCode();
-            return hash * 31 + Pos3d.GetHashCode();
-        }
-    }
-    
-    public class TestVertexShader
-    {
-        
-        // this is generated whether or not it is needed
         private InputLayout inputLayout;
         
-        private SimpleArgs _SimpleArgs;
+        private SharpDX.Direct3D11.VertexShader vertexShader;
         
-        private DifferentArgs _DifferentArgs;
+        private SharpDX.Direct3D11.Buffer simpleargsBuffer;
         
-        private looploop _looploop;
+        private SharpDX.Direct3D11.Buffer differentargsBuffer;
         
-        public SimpleArgs SimpleArgs
+        public void Dispose()
         {
-            get
+            if ((inputLayout != null))
             {
-                return _SimpleArgs;
+                inputLayout.Dispose();
             }
-        }
-        
-        public DifferentArgs DifferentArgs
-        {
-            get
+            if ((vertexShader != null))
             {
-                return _DifferentArgs;
+                vertexShader.Dispose();
             }
-        }
-        
-        public looploop looploop
-        {
-            get
+            if ((simpleargsBuffer != null))
             {
-                return _looploop;
+                simpleargsBuffer.Dispose();
+            }
+            if ((differentargsBuffer != null))
+            {
+                differentargsBuffer.Dispose();
             }
         }
     }

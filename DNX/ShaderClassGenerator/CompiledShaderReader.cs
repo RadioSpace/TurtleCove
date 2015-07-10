@@ -19,19 +19,14 @@ namespace ShaderClassGenerator
         {
 
             if (File.Exists(path) && (Path.GetExtension(path) == ".cso"))
-            {
-
-                bool isVertexShader = false;
+            {                
 
                 byte[] bytes = File.ReadAllBytes(path);
                 ShaderReflection reflecter = new ShaderReflection(bytes);
 
                 ShaderBytecode bytecode = new ShaderBytecode(bytes);
-                ShaderProfile profile = bytecode.GetVersion();
-                if (profile.GetTypePrefix() == "vs")
-                {
-                    isVertexShader = true;
-                }
+                ShaderProfile profile = bytecode.GetVersion();               
+                
 
                 ConstantBuffer[] cbuffers = new ConstantBuffer[reflecter.Description.ConstantBuffers];
                 for (int i = 0; i < reflecter.Description.ConstantBuffers; i++)
@@ -53,9 +48,9 @@ namespace ShaderClassGenerator
 
                 ConstantBuffer[] cbuffersCOPY = cbuffers.ToArray();
 
-               
 
-                return new CompiledShaderReader(path, isVertexShader, cbuffersCOPY, paramdescriptions.ToArray(), bindings.ToArray(),reflecter,bytecode);
+
+                return new CompiledShaderReader(path, profile.GetTypePrefix(), cbuffersCOPY, paramdescriptions.ToArray(), bindings.ToArray(), reflecter, bytecode);
 
 
             }
@@ -76,20 +71,24 @@ namespace ShaderClassGenerator
         ShaderParameterDescription[] parameterDescriptions;
         InputBindingDescription[] resourceBindings;
 
-        bool isVertexShader;
+        
+        
+
+        string typePrefix;
+        public string TypePrefix { get { return typePrefix; } }
         /// <summary>
         /// gets whether or not the code is for a vertex shader
         /// </summary>
-        public bool IsVertexShader { get { return isVertexShader; } }
+        public bool IsVertexShader { get { return typePrefix == "vs"; } } 
 
 
-        CompiledShaderReader(string fn,bool _isVertexShader,ConstantBuffer[] cbs , ShaderParameterDescription[] pds,InputBindingDescription[] rbs,ShaderReflection reflec,ShaderBytecode bytec)
+        CompiledShaderReader(string fn,string shaderType,ConstantBuffer[] cbs , ShaderParameterDescription[] pds,InputBindingDescription[] rbs,ShaderReflection reflec,ShaderBytecode bytec)
         {
             cBuffers = cbs;
             parameterDescriptions = pds;
             resourceBindings = rbs;
             filename = fn;
-            isVertexShader = _isVertexShader;
+            typePrefix = shaderType;
 
             reflector = reflec;
             bytecode = bytec;
